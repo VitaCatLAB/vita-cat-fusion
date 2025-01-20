@@ -20,6 +20,10 @@
   import { PageWrapper } from '@/components/Page';
   import { Description, DescItem, useDescription } from '@/components/Description';
   import { GITHUB_URL, SITE_URL, DOC_URL } from '@/settings/siteSetting';
+  import { useBakStore } from '@/store/modules/bak';
+
+  const bakStore = useBakStore();
+  bakStore.setText();
 
   const { pkg, lastBuildTime, commitHash } = __APP_INFO__;
 
