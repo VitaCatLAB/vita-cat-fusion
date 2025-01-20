@@ -1,5 +1,6 @@
 import { resolve } from 'node:path';
 
+import { execSync } from 'child_process';
 import dayjs from 'dayjs';
 import { readPackageJSON } from 'pkg-types';
 import { defineConfig, loadEnv, mergeConfig, type UserConfig } from 'vite';
@@ -36,6 +37,7 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
     });
 
     const pathResolve = (pathname: string) => resolve(root, '.', pathname);
+    const timestamp = new Date().getTime();
 
     const applicationConfig: UserConfig = {
       base: VITE_PUBLIC_PATH,
@@ -61,10 +63,14 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
       build: {
         target: 'es2015',
         cssTarget: 'chrome80',
+        assetsDir: 'static/img/', // 静态资源目录
         rollupOptions: {
           output: {
             // 入口文件名（不能变，否则所有打包的 js hash 值全变了）
-            entryFileNames: 'index.js',
+            // entryFileNames: 'index.js',
+            chunkFileNames: `static/js/${timestamp}-[hash].js`,
+            entryFileNames: `static/js/${timestamp}-[hash].js`,
+            assetFileNames: `static/[ext]/${timestamp}-[hash].[ext]`,
             manualChunks: {
               vue: ['vue', 'pinia', 'vue-router'],
               antd: ['ant-design-vue', '@ant-design/icons-vue'],
@@ -93,10 +99,18 @@ async function createDefineData(root: string) {
   try {
     const pkgJson = await readPackageJSON(root);
     const { dependencies, devDependencies, name, version } = pkgJson;
+    const commitHash = execSync('git rev-parse HEAD').toString().trim();
+    const shortCommitHash = execSync('git rev-parse --short HEAD').toString().trim();
 
+    console.log('完整 Commit Hash:', commitHash);
+    console.log('短 Commit Hash:', shortCommitHash);
     const __APP_INFO__ = {
       pkg: { dependencies, devDependencies, name, version },
       lastBuildTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      commitHash: {
+        commitHash,
+        shortCommitHash,
+      },
     };
     return {
       __APP_INFO__: JSON.stringify(__APP_INFO__),

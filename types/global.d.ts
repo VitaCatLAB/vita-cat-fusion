@@ -16,6 +16,10 @@ declare global {
       devDependencies: Recordable<string>;
     };
     lastBuildTime: string;
+    commitHash: {
+      commitHash: string;
+      shortCommitHash: string;
+    };
   };
   // declare interface Window {
   //   // Global vue app instance

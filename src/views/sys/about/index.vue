@@ -21,7 +21,7 @@
   import { Description, DescItem, useDescription } from '@/components/Description';
   import { GITHUB_URL, SITE_URL, DOC_URL } from '@/settings/siteSetting';
 
-  const { pkg, lastBuildTime } = __APP_INFO__;
+  const { pkg, lastBuildTime, commitHash } = __APP_INFO__;
 
   const { dependencies, devDependencies, name, version } = pkg;
 
@@ -42,6 +42,12 @@
       field: 'lastBuildTime',
       render: commonTagRender('blue'),
     },
+    {
+      label: 'last git commit hash',
+      field: 'commitHash',
+      render: commonTagRender('blue'),
+    },
+
     {
       label: '文档地址',
       field: 'doc',
@@ -65,6 +71,7 @@
     doc: DOC_URL,
     preview: SITE_URL,
     github: GITHUB_URL,
+    commitHash: commitHash.commitHash,
   };
 
   Object.keys(dependencies).forEach((key) => {
