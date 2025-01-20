@@ -12,7 +12,7 @@ const about: AppRouteModule = {
     hideChildrenInMenu: true,
     icon: 'simple-icons:aboutdotme',
     title: t('routes.dashboard.about'),
-    orderNo: 100000,
+    orderNo: 1003,
   },
   children: [
     {

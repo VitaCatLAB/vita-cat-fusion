@@ -9,7 +9,7 @@ const level: AppRouteModule = {
   component: LAYOUT,
   redirect: '/level/menu1/menu1-1/menu1-1-1',
   meta: {
-    orderNo: 2000,
+    orderNo: 10006,
     icon: 'ion:menu-outline',
     title: t('routes.demo.level.level'),
   },

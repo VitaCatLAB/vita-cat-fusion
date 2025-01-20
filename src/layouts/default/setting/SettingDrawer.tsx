@@ -56,6 +56,7 @@ export default defineComponent({
       getGrayMode,
       getLockTime,
       getShowDarkModeToggle,
+
       // getThemeColor,
     } = useRootSetting();
 
@@ -99,7 +100,7 @@ export default defineComponent({
 
     function renderSidebar() {
       return (
-        <>
+        <div>
           <TypePicker
             menuTypeList={menuTypeListEnum}
             handler={(item: (typeof menuTypeListEnum)[0]) => {
@@ -111,7 +112,7 @@ export default defineComponent({
             }}
             def={unref(getMenuType)}
           />
-        </>
+        </div>
       );
     }
 
@@ -158,7 +159,7 @@ export default defineComponent({
       }
 
       return (
-        <>
+        <div>
           <SwitchItem
             title={t('layout.setting.splitMenu')}
             event={HandlerEnum.MENU_SPLIT}
@@ -282,13 +283,13 @@ export default defineComponent({
             defaultValue={unref(getMenuWidth)}
             formatter={(value: string) => `${parseInt(value)}px`}
           />
-        </>
+        </div>
       );
     }
 
     function renderContent() {
       return (
-        <>
+        <div>
           <SwitchItem
             title={t('layout.setting.breadcrumb')}
             event={HandlerEnum.SHOW_BREADCRUMB}
@@ -369,13 +370,13 @@ export default defineComponent({
             event={HandlerEnum.COLOR_WEAK}
             def={unref(getColorWeak)}
           />
-        </>
+        </div>
       );
     }
 
     function renderTransition() {
       return (
-        <>
+        <div>
           <SwitchItem
             title={t('layout.setting.progress')}
             event={HandlerEnum.OPEN_PROGRESS}
@@ -400,7 +401,7 @@ export default defineComponent({
             options={routerTransitionOptions}
             disabled={!unref(getEnableTransition)}
           />
-        </>
+        </div>
       );
     }
 
@@ -419,6 +420,7 @@ export default defineComponent({
         {renderMainTheme()}
         <Divider>{() => t('layout.setting.headerTheme')}</Divider>
         {renderHeaderTheme()} */}
+
         <Divider>{() => t('layout.setting.sidebarTheme')}</Divider>
         {renderSideBarTheme()}
         <Divider>{() => t('layout.setting.interfaceFunction')}</Divider>

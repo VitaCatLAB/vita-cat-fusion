@@ -158,14 +158,14 @@
 
       return () => {
         return (
-          <>
+          <div>
             {renderHeader()}
             {unref(getUseScroll) ? (
               <ScrollContainer style={unref(getWrapperStyle)}>{() => renderMenu()}</ScrollContainer>
             ) : (
               renderMenu()
             )}
-          </>
+          </div>
         );
       };
     },

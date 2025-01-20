@@ -5,3 +5,5 @@ export const DOC_URL = 'https://doc.vita-cat.duobangbox.cn/';
 
 // site url
 export const SITE_URL = 'https://vita-cat.duobangbox.cn/';
+
+export const HIDE_DEMO = true;

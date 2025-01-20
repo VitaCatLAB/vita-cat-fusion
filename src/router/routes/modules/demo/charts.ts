@@ -9,7 +9,7 @@ const charts: AppRouteModule = {
   component: LAYOUT,
   redirect: '/charts/echarts/map',
   meta: {
-    orderNo: 500,
+    orderNo: 10001,
     icon: 'ion:bar-chart-outline',
     title: t('routes.demo.charts.charts'),
   },

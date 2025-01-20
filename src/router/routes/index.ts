@@ -5,10 +5,11 @@ import { PAGE_NOT_FOUND_ROUTE, REDIRECT_ROUTE } from '@/router/routes/basic';
 import { mainOutRoutes } from './mainOut';
 import { PageEnum } from '@/enums/pageEnum';
 import { t } from '@/hooks/web/useI18n';
+import { HIDE_DEMO } from '@/settings/siteSetting';
 
 // import.meta.glob() 直接引入所有的模块 Vite 独有的功能
 const modules = import.meta.glob('./modules/**/*.ts', { eager: true });
-const routeModuleList: AppRouteModule[] = [];
+let routeModuleList: AppRouteModule[] = [];
 
 // 加入到路由集合中
 Object.keys(modules).forEach((key) => {
@@ -16,6 +17,17 @@ Object.keys(modules).forEach((key) => {
   const modList = Array.isArray(mod) ? [...mod] : [mod];
   routeModuleList.push(...modList);
 });
+//判断HIDE_DEMO是否为ture，过滤掉demo路由，orderNo在10001-99999之间
+if (HIDE_DEMO) {
+  routeModuleList = routeModuleList.filter(
+    (routeModule) =>
+      !(
+        routeModule.meta?.orderNo &&
+        routeModule.meta?.orderNo >= 10001 &&
+        routeModule.meta?.orderNo <= 99999
+      ),
+  );
+}
 
 export const asyncRoutes = [PAGE_NOT_FOUND_ROUTE, ...routeModuleList];
 
