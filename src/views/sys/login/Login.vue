@@ -26,8 +26,16 @@
             <div class="mt-10 font-medium text-white -enter-x">
               <span class="inline-block mt-4 text-3xl"> {{ t('sys.login.signInTitle') }}</span>
             </div>
-            <div class="mt-5 font-normal text-white dark:text-gray-500 -enter-x">
+            <div
+              @dblclick="handleApi"
+              class="mt-5 font-normal text-white dark:text-gray-500 -enter-x"
+            >
               {{ t('sys.login.signInDesc') }}
+              <div>
+                <div> {{ name }} </div>
+                <div>lastBuildTime:{{ lastBuildTime }}</div>
+                <div>commitHash:{{ commitHash.commitHash }}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -46,6 +54,7 @@
       </div>
     </div>
   </div>
+  <ChangeApi @register="registerApi" />
 </template>
 <script lang="ts" setup>
   import { AppDarkModeToggle, AppLocalePicker, AppLogo } from '@/components/Application';
@@ -59,7 +68,10 @@
   import MobileForm from './MobileForm.vue';
   import QrCodeForm from './QrCodeForm.vue';
   import RegisterForm from './RegisterForm.vue';
+  import ChangeApi from '@/yunbaopo/components/ChangeApi.vue';
+  import { useModal } from '@/components/Modal';
 
+  const [registerApi, { openModal: openApiModal }] = useModal();
   defineProps({
     sessionTimeout: {
       type: Boolean,
@@ -72,6 +84,14 @@
   const localeStore = useLocaleStore();
   const showLocale = localeStore.getShowPicker;
   const title = computed(() => globSetting?.title ?? '');
+
+  const { pkg, lastBuildTime, commitHash } = __APP_INFO__;
+
+  const { name, version } = pkg;
+
+  const handleApi = () => {
+    openApiModal(true, {});
+  };
 </script>
 <style lang="less">
   @prefix-cls: ~'@{namespace}-login';

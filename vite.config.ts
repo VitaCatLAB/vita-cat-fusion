@@ -24,6 +24,14 @@ export default defineApplicationConfig({
           // only https
           // secure: false
         },
+        '/dev-api': {
+          target: 'http://192.168.31.249:48080',
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(new RegExp(`^/dev-api`), ''),
+          // only https
+          // secure: false
+        },
         '/upload': {
           target: 'http://localhost:3300/upload',
           changeOrigin: true,
