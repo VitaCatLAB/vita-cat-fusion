@@ -3,6 +3,7 @@
     <h1>Fabric Canvas Demo</h1>
     <div class="toolbar">
       <button @click="addRectangle">添加矩形</button>
+      <button @click="addTunnel">添加隧道</button>
       <button @click="addCircle">添加圆形</button>
       <button @click="resetCanvas">重置画布</button>
       <button @click="clearCanvas">清空画布</button>
@@ -22,29 +23,46 @@
   const canvasRef = ref<HTMLCanvasElement | null>(null);
   const fabricRender = new FabricRender();
 
+  const addTunnel = () => {
+    const circle = new fabric.Circle({
+      radius: 25,
+      fill: 'green',
+    });
+    //位置至画布中心
+    circle.set({
+      left: fabricRender.canvas.getWidth() / 2,
+      top: fabricRender.canvas.getHeight() / 2,
+    });
+
+    fabricRender.add([circle], true);
+  };
+
   // 添加矩形
   const addRectangle = () => {
     fabricRender.add(
-      new fabric.Rect({
-        left: Math.random() * 200,
-        top: Math.random() * 200,
-        width: 50,
-        height: 50,
-        fill: 'blue',
-      }),
+      [
+        new fabric.Rect({
+          left: Math.random() * 200,
+          top: Math.random() * 200,
+          width: 50,
+          height: 50,
+          fill: 'blue',
+        }),
+      ],
+      true,
     );
   };
 
   // 添加圆形
   const addCircle = () => {
-    fabricRender.add(
+    fabricRender.add([
       new fabric.Circle({
         left: Math.random() * 200,
         top: Math.random() * 200,
         radius: 25,
         fill: 'green',
       }),
-    );
+    ]);
   };
 
   // 重置画布视口

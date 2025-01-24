@@ -1,6 +1,8 @@
-import { fabric as _fabric } from 'fabric';
 import { DEFAULT_BACKGROUND_COLOR, DEBOUNCE_DELAY } from './config';
 import { registerCanvasEvents } from './events';
+import _fabric from 'fabric';
+
+export const fabric = _fabric.fabric;
 
 export interface FabricRenderOptions {
   backgroundColor?: string;
@@ -8,13 +10,12 @@ export interface FabricRenderOptions {
   customListeners?: Record<string, (opt: any) => void>; // 自定义事件监听器
 }
 
-export const fabric = _fabric;
-
 export class FabricRender {
   public canvas: fabric.Canvas = new fabric.Canvas(null); // 画布实例
   private container: HTMLElement | null = null; // 画布容器
   private resizeObserver: ResizeObserver | null = null; // ResizeObserver 实例
   private debouncedResize: (event: UIEvent) => void; // 防抖后的调整函数
+  private fixedObjects: Set<fabric.Object> = new Set(); // 存储固定大小的对象
 
   constructor() {
     this.debouncedResize = this.debounce(this.adjustCanvasSize.bind(this), DEBOUNCE_DELAY); // 初始化防抖函数
@@ -56,6 +57,9 @@ export class FabricRender {
 
     // 初始化 ResizeObserver 和窗口监听
     this.initResizeListener();
+
+    // 监听画布缩放事件，动态调整固定大小对象
+    this.canvas.on('mouse:wheel', () => this.adjustFixedObjects());
   }
 
   /**
@@ -68,6 +72,24 @@ export class FabricRender {
       this.canvas.setDimensions({ width, height });
       this.canvas.requestRenderAll();
     }
+  }
+
+  /**
+   * @description 动态调整固定大小对象的缩放
+   */
+  private adjustFixedObjects(): void {
+    const currentZoom = this.canvas.getZoom();
+    this.fixedObjects.forEach((obj) => {
+      const initialScaleX = (obj as any).__initialScaleX;
+      const initialScaleY = (obj as any).__initialScaleY;
+      if (initialScaleX !== undefined && initialScaleY !== undefined) {
+        obj.set({
+          scaleX: initialScaleX / currentZoom,
+          scaleY: initialScaleY / currentZoom,
+        });
+      }
+    });
+    this.canvas.requestRenderAll();
   }
 
   /**
@@ -130,9 +152,18 @@ export class FabricRender {
   /**
    * @description 添加对象到画布
    * @param {...fabric.Object[]} objects - 添加的对象
+   * @param {boolean} isFixed - 是否为固定大小对象
    */
-  public add(...objects: fabric.Object[]): void {
-    this.canvas.add(...objects);
+  public add(objects: fabric.Object[], isFixed: boolean = false): void {
+    objects.forEach((obj) => {
+      if (isFixed) {
+        // 标记固定大小的对象
+        this.fixedObjects.add(obj);
+        (obj as any).__initialScaleX = obj.scaleX || 1;
+        (obj as any).__initialScaleY = obj.scaleY || 1;
+      }
+      this.canvas.add(obj);
+    });
   }
 
   /**
@@ -140,5 +171,6 @@ export class FabricRender {
    */
   public clear(): void {
     this.canvas.clear();
+    this.fixedObjects.clear();
   }
 }
