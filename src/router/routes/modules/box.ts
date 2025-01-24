@@ -23,6 +23,15 @@ const box: AppRouteModule = {
         icon: 'simple-icons:boxdotme',
       },
     },
+    {
+      path: 'fabric-fusion',
+      name: 'box-fabric-fusion',
+      component: () => import('@/views/box/fabric/fabric-fusion.vue'),
+      meta: {
+        title: 'fabric-fusion',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
   ],
 };
 
