@@ -25,8 +25,16 @@
 
   const addTunnel = () => {
     const circle = new fabric.Circle({
-      radius: 25,
-      fill: 'green',
+      radius: 100,
+      fill: 'transparent',
+      originX: 'center',
+      originY: 'center',
+    });
+
+    //设为空心圆
+    circle.set({
+      stroke: 'black',
+      strokeWidth: 2,
     });
     //位置至画布中心
     circle.set({
@@ -44,25 +52,28 @@
         new fabric.Rect({
           left: Math.random() * 200,
           top: Math.random() * 200,
-          width: 50,
-          height: 50,
+          width: 100,
+          height: 100,
           fill: 'blue',
         }),
       ],
-      true,
+      false,
     );
   };
 
   // 添加圆形
   const addCircle = () => {
-    fabricRender.add([
-      new fabric.Circle({
-        left: Math.random() * 200,
-        top: Math.random() * 200,
-        radius: 25,
-        fill: 'green',
-      }),
-    ]);
+    fabricRender.add(
+      [
+        new fabric.Circle({
+          left: Math.random() * 200,
+          top: Math.random() * 200,
+          radius: 50,
+          fill: 'green',
+        }),
+      ],
+      true,
+    );
   };
 
   // 重置画布视口

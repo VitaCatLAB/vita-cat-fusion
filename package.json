@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
-    "@fabric-fusion/core": "^1.0.12",
+    "@fabric-fusion/core": "^1.0.20",
     "@iconify/iconify": "^3.1.1",
     "@logicflow/core": "^1.2.26",
     "@logicflow/extension": "^1.2.26",
