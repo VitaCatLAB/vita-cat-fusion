@@ -12,7 +12,6 @@ export const transformPoint = (param: IPoint): IPoint => {
   pointParam.x = transformer.toCanvasX(pointParam.x);
   pointParam.y = transformer.toCanvasY(pointParam.y);
 
-  // ✅仅存储最初的 `param`，防止 `origin` 无限嵌套
   pointParam.origin = param.origin ?? param;
 
   return pointParam;

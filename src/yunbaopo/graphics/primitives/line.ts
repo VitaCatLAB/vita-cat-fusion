@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import { transformer } from '../utils/transformer'; // ✅ 统一转换逻辑
+import { transformer } from '../utils/transformer';
 import { ILine } from '../interface';
 
 /**
