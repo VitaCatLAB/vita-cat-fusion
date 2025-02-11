@@ -1,11 +1,11 @@
 import { cloneDeep } from 'lodash';
-import { transformer } from '../utils/transformer'; // 🔥 替换 `origin2RenderR`，统一使用 `transformer`
+import { transformer } from '../utils/transformer';
 import { IArc } from '../interface';
 
 export const transformArc = (param: IArc): IArc => {
   const arcParam = cloneDeep(param);
 
-  // 🔥 使用 transformer 进行转换
+  // 使用 transformer 进行转换
   arcParam.r = transformer.toCanvasLength(arcParam.r);
   arcParam.startPoint.x = transformer.toCanvasX(arcParam.startPoint.x);
   arcParam.startPoint.y = transformer.toCanvasY(arcParam.startPoint.y);

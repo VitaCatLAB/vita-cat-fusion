@@ -1,6 +1,7 @@
 import { IPoint } from '../interface';
 
 export * from './transformer';
+export * from './name-generator';
 
 export const computeLength = (h1: IPoint, h2: IPoint) => {
   const x1 = h1.x;
