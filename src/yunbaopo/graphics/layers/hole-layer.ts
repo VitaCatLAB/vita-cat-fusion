@@ -1,4 +1,4 @@
-import { holeGroupProcessor } from '@/yunbaopo/processors/hole-group-processor';
+import { holeGroupProcessor } from '@/yunbaopo/processors/hole-processor';
 import { hole } from '../data';
 import { fabric } from '@fabric-fusion/core';
 import _ from 'lodash';

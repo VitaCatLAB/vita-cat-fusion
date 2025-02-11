@@ -1,3 +1,53 @@
+export interface Point {
+  x: number;
+  y: number;
+}
+interface Arc {
+  type: IGraphType.ARC;
+  borderType: IBorderType;
+  x: number;
+  y: number;
+  r: number;
+  a1: number;
+  a2: number;
+  deltaTheta: number;
+  startPoint: Point;
+  endPoint: Point;
+}
+interface Line {
+  type: IGraphType.LINE;
+  borderType: IBorderType;
+
+  p1: Point;
+  p2: Point;
+}
+
+export enum IBorderType {
+  BORDER = 'BORDER',
+  FLOOR = 'FLOOR',
+  NO = 'NO',
+}
+export interface IPoint extends Point {
+  origin?: Point;
+}
+export interface ILine extends Line {
+  origin?: Line;
+}
+export interface IArc extends Arc {
+  origin?: Arc;
+}
+
+export enum IGraphType {
+  POINT = 'POINT',
+  LINE = 'LINE',
+  ARC = 'ARC',
+  GROUP = 'GROUP',
+  CIRCLE = 'CIRCLE',
+  TEXT = 'TEXT',
+  POLYGON = 'POLYGON',
+}
+///示例代码内容↓
+
 export enum OutlineFrom {
   Template,
   Outline,

@@ -25,6 +25,8 @@ export const generateObjects = (
 
   // 普通数组存储每个 `fabric.Group`，确保它们是独立对象
   const fabricObjects: fabric.Object[] = [];
+
+  ///绘制图形///
   const count = 2;
 
   for (let i = 0; i < count; i++) {

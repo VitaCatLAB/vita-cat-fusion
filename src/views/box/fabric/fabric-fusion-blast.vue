@@ -20,7 +20,8 @@
   import { FabricRender, fabric } from '@fabric-fusion/core';
 
   import { generateHoles } from '@/yunbaopo/graphics/layers/hole-layer';
-  import { generateObjects } from '@/yunbaopo/graphics/layers/genObjects';
+  import { generateObjects } from '@/yunbaopo/graphics/layers/simple-layer';
+  import { generatePartition } from '@/yunbaopo/graphics/layers/partition-layer';
 
   // 定义容器和画布的引用
   const containerRef = ref<HTMLDivElement | null>(null);
@@ -52,8 +53,16 @@
       onHover: (data) => console.log('鼠标悬停在炮孔上:', data),
     });
 
+    const partitionObjects = generatePartition({
+      fill: '#00ff00', // 绿色partition
+      onClick: (data) => console.log('点击了partition:', data),
+      onHover: (data) => console.log('鼠标悬停在partition上:', data),
+    });
+
     // **将所有炮孔对象单独添加到 Fabric 画布**
-    mainRender.add(holeObjects);
+    // mainRender.add(holeObjects);
+
+    mainRender.add(partitionObjects);
 
     mainRender.add(testObjects);
   };

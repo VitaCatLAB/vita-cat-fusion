@@ -1,24 +1,8 @@
-import { CoordinateTransformer } from '@fabric-fusion/core';
+import { IPoint } from '../interface';
 
-interface Point {
-  x: number;
-  y: number;
-}
-const t = () => {
-  const h = 598;
-  const w = 1539;
+export * from './transformer';
 
-  // const t = new CoordinateTransformer(w, h);
-  const t = new CoordinateTransformer({
-    canvasWidth: w,
-    canvasHeight: h,
-    yOffset: -200,
-  });
-  return t;
-};
-
-export const transformer = t();
-export const computeLength = (h1: Point, h2: Point) => {
+export const computeLength = (h1: IPoint, h2: IPoint) => {
   const x1 = h1.x;
   const y1 = h1.y;
   const x2 = h2.x;
