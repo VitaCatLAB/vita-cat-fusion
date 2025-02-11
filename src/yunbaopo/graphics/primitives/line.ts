@@ -16,7 +16,6 @@ export const transformLine = (param: ILine): ILine => {
   lineParam.p2.x = transformer.toCanvasX(lineParam.p2.x);
   lineParam.p2.y = transformer.toCanvasY(lineParam.p2.y);
 
-  // ✅ 防止 `origin` 无限嵌套，只存储最初的 `param`
   lineParam.origin = param.origin ?? param;
 
   return lineParam;
@@ -31,6 +30,6 @@ export const transformLine = (param: ILine): ILine => {
 export const generateLinePath = (lineParam: ILine, needM: boolean = false): string => {
   const { p1, p2 } = lineParam;
 
-  // ✅ 直接构造 SVG `L` 线段路径
+  // 直接构造 SVG `L` 线段路径
   return `${needM ? `M ${p1.x} ${p1.y} ` : ''}L ${p2.x} ${p2.y}`.trim();
 };
