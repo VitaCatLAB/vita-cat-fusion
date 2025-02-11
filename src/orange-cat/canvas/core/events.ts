@@ -1,4 +1,4 @@
-import { fabric } from 'fabric';
+// import { fabric } from 'fabric';
 import { ZOOM_RANGE } from './config';
 
 /**
@@ -54,16 +54,17 @@ export const registerCanvasEvents = (canvas: fabric.Canvas): void => {
   canvas.on('mouse:up', () => {
     isDragging = false;
     canvas.selection = true;
+    console.log('fabric-fusion/core:拖拽结束');
   });
 
-  // 对象移动事件
-  canvas.on('object:moving', (opt: any) => {
-    console.log('对象正在移动:', opt.target);
-  });
+  // // 对象移动事件
+  // canvas.on('object:moving', (opt: any) => {
+  //   console.log('fabric-fusion/core:对象正在移动:', opt.target);
+  // });
 
-  // 鼠标点击事件（示例）
-  canvas.on('mouse:down', (opt: any) => {
-    const pointer = canvas.getPointer(opt.e);
-    console.log(`鼠标点击位置: X=${pointer.x}, Y=${pointer.y}`);
-  });
+  // // 鼠标点击事件（示例）
+  // canvas.on('mouse:down', (opt: any) => {
+  //   const pointer = canvas.getPointer(opt.e);
+  //   console.log(`fabric-fusion/core:鼠标点击位置: X=${pointer.x}, Y=${pointer.y}`);
+  // });
 };
