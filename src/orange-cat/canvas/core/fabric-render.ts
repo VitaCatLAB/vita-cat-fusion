@@ -4,7 +4,7 @@ import _fabric from 'fabric';
 
 export const fabric = _fabric.fabric;
 
-export interface FabricRenderOptions {
+export interface FabricRenderOptions extends fabric.ICanvasOptions {
   backgroundColor?: string;
   enableDefaultListeners?: boolean; // 是否启用默认监听事件
   customListeners?: Record<string, (opt: any) => void>; // 自定义事件监听器
