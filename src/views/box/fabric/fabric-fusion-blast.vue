@@ -37,34 +37,51 @@
   const drawPartition = () => {};
 
   const drawInit = () => {
-    // 生成炮孔对象列表
-    const holeObjects = generateHoles({
-      fill: '#ff0000', // 红色炮孔
-      stroke: '#ffff00', // 黄色边框
-      radius: 15, // 炮孔半径增大到 15
-      selectable: true, // 允许选中
-      onClick: (holeData) => console.log('点击了炮孔:', holeData),
-      onHover: (holeData) => console.log('鼠标悬停在炮孔上:', holeData),
+    const currentSort = ['hole', 'partition', 'test']; // 控制绘制顺序
+
+    //  将绘制方法拆分，提高可读性
+    const generateHoleObjects = (): fabric.Object[] => {
+      return generateHoles({
+        fill: '#ff0000', // 红色炮孔
+        stroke: '#ffff00', // 黄色边框
+        radius: 15,
+        selectable: true,
+        onClick: (holeData) => console.log('点击了炮孔:', holeData),
+        onHover: (holeData) => console.log('鼠标悬停在炮孔上:', holeData),
+      });
+    };
+
+    const generateTestObjects = (): fabric.Object[] => {
+      return generateObjects({
+        fill: '#ff0000',
+        onClick: (data) => console.log('点击了测试对象:', data),
+        onHover: (data) => console.log('鼠标悬停在测试对象上:', data),
+      });
+    };
+
+    const generatePartitionObjects = (): fabric.Object[] => {
+      return generatePartition({
+        fill: '#00ff00', // 绿色 partition
+        onClick: (data) => console.log('点击了 partition:', data),
+        onHover: (data) => console.log('鼠标悬停在 partition 上:', data),
+      });
+    };
+
+    //  将绘制方法映射到 `layerGenerators`
+    const layerGenerators: Record<string, () => fabric.Object[]> = {
+      hole: generateHoleObjects,
+      test: generateTestObjects,
+      partition: generatePartitionObjects,
+    };
+
+    //  遍历 `currentSort`，按顺序加载图层
+    currentSort.forEach((layer) => {
+      if (layerGenerators[layer]) {
+        mainRender.add(layerGenerators[layer]()); // 依次添加到 Fabric 画布
+      } else {
+        console.log(`图层 ${layer} 不存在`);
+      }
     });
-
-    const testObjects = generateObjects({
-      fill: '#ff0000', // 红色炮孔
-      onClick: (data) => console.log('点击了炮孔:', data),
-      onHover: (data) => console.log('鼠标悬停在炮孔上:', data),
-    });
-
-    const partitionObjects = generatePartition({
-      fill: '#00ff00', // 绿色partition
-      onClick: (data) => console.log('点击了partition:', data),
-      onHover: (data) => console.log('鼠标悬停在partition上:', data),
-    });
-
-    // **将所有炮孔对象单独添加到 Fabric 画布**
-    // mainRender.add(holeObjects);
-
-    mainRender.add(partitionObjects);
-
-    mainRender.add(testObjects);
   };
 
   watch(
