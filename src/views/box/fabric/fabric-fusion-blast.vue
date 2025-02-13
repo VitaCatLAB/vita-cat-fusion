@@ -7,7 +7,8 @@
       <button @click="addCircle">添加圆形</button>
       <button @click="resetCanvas">重置画布</button>
       <button @click="clearCanvas">清空画布</button>
-      <button @click="setUUID">SETUUID</button>
+      <button @click="setUUID">SET UUID</button>
+      <button @click="exportFile">EXPORT FILE</button>
     </div>
     <div class="canvas-wrapper" ref="containerRef">
       <canvas id="fabric-canvas" ref="canvasRef"></canvas>
@@ -22,6 +23,7 @@
   import { generateHoles } from '@/yunbaopo/graphics/layers/hole-layer';
   import { generateObjects } from '@/yunbaopo/graphics/layers/simple-layer';
   import { generatePartition } from '@/yunbaopo/graphics/layers/partition-layer';
+  import { message } from 'ant-design-vue';
 
   // 定义容器和画布的引用
   const containerRef = ref<HTMLDivElement | null>(null);
@@ -34,38 +36,54 @@
     uuid.value = Math.random().toString();
   };
 
-  const drawPartition = () => {};
+  const exportFile = () => {
+    message.info('导出SVG-generatePartitionObjects');
+    const objs = generatePartitionObjects();
+    const group = new fabric.Group(objs, {});
 
+    const svg = group.toSVG();
+    const png = group.toDataURL({
+      format: 'png',
+      quality: 1,
+      multiplier: 1,
+    });
+
+    console.log('file', {
+      svg,
+      png,
+    });
+  };
+
+  const generateHoleObjects = (): fabric.Object[] => {
+    return generateHoles({
+      fill: '#ff0000', // 红色炮孔
+      stroke: '#ffff00', // 黄色边框
+      radius: 15,
+      selectable: true,
+      onClick: (holeData) => console.log('点击了炮孔:', holeData),
+      onHover: (holeData) => console.log('鼠标悬停在炮孔上:', holeData),
+    });
+  };
+
+  const generateTestObjects = (): fabric.Object[] => {
+    return generateObjects({
+      fill: '#ff0000',
+      onClick: (data) => console.log('点击了测试对象:', data),
+      onHover: (data) => console.log('鼠标悬停在测试对象上:', data),
+    });
+  };
+
+  const generatePartitionObjects = (): fabric.Object[] => {
+    return generatePartition({
+      fill: '#00ff00', // 绿色 partition
+      onClick: (data) => console.log('点击了 partition:', data),
+      onHover: (data) => console.log('鼠标悬停在 partition 上:', data),
+    });
+  };
   const drawInit = () => {
     const currentSort = ['hole', 'partition', 'test']; // 控制绘制顺序
 
     //  将绘制方法拆分，提高可读性
-    const generateHoleObjects = (): fabric.Object[] => {
-      return generateHoles({
-        fill: '#ff0000', // 红色炮孔
-        stroke: '#ffff00', // 黄色边框
-        radius: 15,
-        selectable: true,
-        onClick: (holeData) => console.log('点击了炮孔:', holeData),
-        onHover: (holeData) => console.log('鼠标悬停在炮孔上:', holeData),
-      });
-    };
-
-    const generateTestObjects = (): fabric.Object[] => {
-      return generateObjects({
-        fill: '#ff0000',
-        onClick: (data) => console.log('点击了测试对象:', data),
-        onHover: (data) => console.log('鼠标悬停在测试对象上:', data),
-      });
-    };
-
-    const generatePartitionObjects = (): fabric.Object[] => {
-      return generatePartition({
-        fill: '#00ff00', // 绿色 partition
-        onClick: (data) => console.log('点击了 partition:', data),
-        onHover: (data) => console.log('鼠标悬停在 partition 上:', data),
-      });
-    };
 
     //  将绘制方法映射到 `layerGenerators`
     const layerGenerators: Record<string, () => fabric.Object[]> = {
