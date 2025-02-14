@@ -10,7 +10,7 @@ import { ILine } from '../interface';
 export const transformLine = (param: ILine): ILine => {
   const lineParam = cloneDeep(param);
 
-  // 🔥 使用 `transformer` 进行坐标转换
+  // 使用 transformer进行坐标转换
   lineParam.p1.x = transformer.toCanvasX(lineParam.p1.x);
   lineParam.p1.y = transformer.toCanvasY(lineParam.p1.y);
   lineParam.p2.x = transformer.toCanvasX(lineParam.p2.x);

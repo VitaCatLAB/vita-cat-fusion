@@ -186,7 +186,7 @@
       mainRender.init(
         canvasRef.value,
         {
-          selectionColor: 'red',
+          selectionColor: 'red', //fabric配置项
           backgroundColor: '#f9f9f9', // 设置画布背景颜色
           enableDefaultListeners: true, // 启用默认事件监听器
           customListeners: {

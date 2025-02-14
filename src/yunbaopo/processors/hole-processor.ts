@@ -4,6 +4,8 @@ import { genHoleDepth } from '../gen/calculate-hole-depth'; // 导入计算炮�
 import { computeLength, transformer } from '../graphics/utils'; // 导入计算长度及坐标转换工具
 import { Hole } from '../graphics/interface'; // 导入炮孔数据接口
 
+//TODO:考虑是否需要不同的transformer
+
 const MAX_DISTANCE = 200; // 设定最大炮孔分组距离（单位：毫米）
 
 /**
