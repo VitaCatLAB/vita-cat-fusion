@@ -129,6 +129,7 @@
     "@types/qs": "^6.9.15",
     "@types/showdown": "^2.0.6",
     "@types/sortablejs": "^1.15.8",
+    "@types/three": "^0.173.0",
     "@vben/eslint-config": "workspace:*",
     "@vben/stylelint-config": "workspace:*",
     "@vben/ts-config": "workspace:*",

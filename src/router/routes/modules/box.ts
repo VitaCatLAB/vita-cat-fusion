@@ -41,6 +41,26 @@ const box: AppRouteModule = {
         icon: 'simple-icons:boxdotme',
       },
     },
+    //three-fusion
+    {
+      path: 'three-fusion',
+      name: 'box-three-fusion',
+      component: () => import('@/views/box/three/three-fusion.vue'),
+      meta: {
+        title: 'three-fusion',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
+    //three-fusion-blast
+    {
+      path: 'three-fusion-blast',
+      name: 'box-three-fusion-blast',
+      component: () => import('@/views/box/three/three-fusion-blast.vue'),
+      meta: {
+        title: 'three-fusion-blast',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
   ],
 };
 
