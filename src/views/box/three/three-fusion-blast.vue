@@ -28,6 +28,7 @@
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(clientWidth, clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setClearColor(0x000000);
     containerRef.value.appendChild(renderer.domElement);
 
     initHelpers(); // 初始化辅助工具（坐标轴、轨道控制器）
@@ -144,28 +145,31 @@
     // ------------------------
     // 假设三个点都位于 XZ 平面（y = 0）
     const pointA = new THREE.Vector3(0, 0, 10);
-    const pointB = new THREE.Vector3(10, 0, -10);
+    const pointB = new THREE.Vector3(0, 0, 0);
     const pointC = new THREE.Vector3(10, 0, 0);
+    const pointD = new THREE.Vector3(10, 0, -10);
 
-    const curvePoints = [pointA, pointB, pointC];
+    const curvePoints = [pointA, pointB, pointC, pointD];
+    // const curvePoints = [pointA, pointB];
 
     // 使用 CatmullRomCurve3 生成光滑曲线，closed 设置为 false，tension 可调（0.5 为较平滑）
-    const smoothCurve = new THREE.CatmullRomCurve3(curvePoints, false, 'catmullrom', 0.5);
+    const smoothCurve = new THREE.CatmullRomCurve3(curvePoints, false, 'catmullrom', 0);
 
     // 为方便观察，也将曲线显示出来
     const curveGeometry = new THREE.BufferGeometry().setFromPoints(smoothCurve.getPoints(100));
-    const curveMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
+    const curveMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
     const curveLine = new THREE.Line(curveGeometry, curveMaterial);
     scene.add(curveLine);
 
     // ------------------------
     // 3. 定义梯形截面
     // ------------------------
+
     const trapezoidShape = new THREE.Shape();
-    trapezoidShape.moveTo(0, 0); // 底边左侧点
-    trapezoidShape.lineTo(1, 2); // 底边右侧点
-    trapezoidShape.lineTo(3, 2); // 顶边右侧点
-    trapezoidShape.lineTo(4, 0); // 顶边左侧点
+    trapezoidShape.moveTo(-2, -1); // 底边左侧
+    trapezoidShape.lineTo(2, -1); // 底边右侧
+    trapezoidShape.lineTo(1, 1); // 顶边右侧
+    trapezoidShape.lineTo(-1, 1); // 顶边左侧
     trapezoidShape.closePath();
 
     // ------------------------
@@ -179,6 +183,7 @@
     };
 
     const pipeGeometry = new THREE.ExtrudeGeometry(trapezoidShape, extrudeSettings);
+
     const pipeMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
     const pipeMesh = new THREE.Mesh(pipeGeometry, pipeMaterial);
     scene.add(pipeMesh);
