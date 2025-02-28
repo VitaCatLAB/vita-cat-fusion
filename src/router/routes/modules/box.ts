@@ -41,6 +41,15 @@ const box: AppRouteModule = {
         icon: 'simple-icons:boxdotme',
       },
     },
+    {
+      path: 'fabric-fusion-mask',
+      name: 'box-fabric-fusion-mask',
+      component: () => import('@/views/box/fabric/fabric-fusion-mask.vue'),
+      meta: {
+        title: 'fabric-fusion-mask',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
     //three-fusion
     {
       path: 'three-fusion',

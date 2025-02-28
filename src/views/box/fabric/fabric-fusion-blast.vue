@@ -2,7 +2,7 @@
   <div class="fabric-container">
     <h1>Fabric Canvas Demo</h1>
     <div class="toolbar">
-      <button @click="addRectangle">添加矩形1</button>
+      <button @click="addRectangle">添加矩形</button>
       <button @click="addTunnel">添加隧道</button>
       <button @click="addCircle">添加圆形</button>
       <button @click="resetCanvas">重置画布</button>

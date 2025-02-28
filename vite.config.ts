@@ -38,6 +38,14 @@ export default defineApplicationConfig({
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^/upload`), ''),
         },
+        '/img': {
+          target: 'https://cdn.duobangbox.com',
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(new RegExp(`^/img`), ''),
+          // only https
+          // secure: false
+        },
       },
       open: true, // 项目启动后，自动打开
       warmup: {

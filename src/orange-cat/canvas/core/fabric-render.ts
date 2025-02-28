@@ -43,6 +43,7 @@ export class FabricRender {
       ...options,
     });
 
+    fabric.textureSize = 8192;
     // 添加默认监听事件
     if (options.enableDefaultListeners) {
       registerCanvasEvents(this.canvas);
