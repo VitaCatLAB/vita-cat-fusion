@@ -33,6 +33,15 @@ const box: AppRouteModule = {
       },
     },
     {
+      path: 'fabric-fusion-esign',
+      name: 'box-fabric-fusion-esign',
+      component: () => import('@/views/box/fabric/fabric-fusion-esign.vue'),
+      meta: {
+        title: 'fabric-fusion-esgin',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
+    {
       path: 'fabric-fusion-blast',
       name: 'box-fabric-fusion-blast',
       component: () => import('@/views/box/fabric/fabric-fusion-blast.vue'),
@@ -67,6 +76,15 @@ const box: AppRouteModule = {
       component: () => import('@/views/box/three/three-fusion-blast.vue'),
       meta: {
         title: 'three-fusion-blast',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
+    {
+      path: 'three-fusion-tunnel',
+      name: 'box-three-fusion-tunnel',
+      component: () => import('@/views/box/three/three-fusion-tunnel.vue'),
+      meta: {
+        title: 'three-fusion-tunnel',
         icon: 'simple-icons:boxdotme',
       },
     },
