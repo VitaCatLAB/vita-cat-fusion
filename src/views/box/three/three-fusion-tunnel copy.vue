@@ -6,27 +6,31 @@
   import { genHoleDepth } from '@/yunbaopo/gen/calculate-hole-depth';
   import { hole, outline } from '@/yunbaopo/graphics/data';
   import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-  import Stats from 'three/examples/jsm/libs/stats.module.js';
-
+  import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
   // 绑定 Vue 组件的 DOM 容器
   const containerRef = ref<HTMLDivElement | null>(null);
-  let renderer: THREE.WebGLRenderer | null = null; // WebGL 渲染器
-  let scene: THREE.Scene; // Three.js 场景
+  let renderer: THREE.WebGLRenderer | null = null; // 渲染器
+  let scene: THREE.Scene; // 场景
   let camera: THREE.PerspectiveCamera | THREE.OrthographicCamera; // 相机（可切换）
   let controls: OrbitControls | null = null; // 轨道控制器
-  const isPerspective = ref(false); // 是否使用透视相机
+  const isPerspective = ref(false); // 记录当前是否使用透视相机
   const size = ref(3); // 视野范围
-  let stats: Stats; // 性能监测工具
-  const config: any = { closed: false, curveType: 'centripetal', tension: 0.5 };
 
+  const config: any = {
+    closed: false,
+    curveType: 'centripetal',
+    tension: 0.5,
+  };
   // 初始化 Three.js 场景
   const initScene = () => {
     if (!containerRef.value) return;
+
     const { clientWidth, clientHeight } = containerRef.value;
 
-    scene = new THREE.Scene(); // 创建场景
+    scene = new THREE.Scene(); // 创建 Three.js 场景
     initCamera(clientWidth, clientHeight); // 初始化相机
 
+    // 创建 WebGL 渲染器
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(clientWidth, clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -34,7 +38,7 @@
     containerRef.value.appendChild(renderer.domElement);
 
     initHelpers(); // 初始化辅助工具（坐标轴、轨道控制器）
-    installTools();
+    initGUI();
     animate(); // 启动渲染循环
   };
 
@@ -107,18 +111,7 @@
     scene.add(axesHelper);
   };
 
-  const uninstallTools = () => {
-    if (containerRef.value) {
-      containerRef.value.removeChild(stats.dom);
-    }
-  };
-  const installTools = () => {
-    if (containerRef.value) {
-      //stats
-      console.log('stats');
-      stats = new Stats();
-      containerRef.value.appendChild(stats.dom); // 直接插入 Three.js 画布容器内部
-    }
+  const initGUI = () => {
     console.log('initGUI');
     const gui = new GUI();
     // gui增加交互界面，用来改变obj对应属性
@@ -131,7 +124,6 @@
     requestAnimationFrame(animate);
     controls?.update(); // 更新控制器状态
     renderer?.render(scene, camera); // 渲染场景
-    stats.update(); // 更新性能监测
   };
   // 更新场景的函数
   const updateScene = () => {
@@ -154,7 +146,6 @@
     controls?.dispose();
     renderer?.dispose();
     renderer = null;
-    uninstallTools();
   });
   // 添加圆形
   const addCircle = () => {
@@ -332,15 +323,45 @@
     };
 
     const tunnelGeometry = new THREE.ExtrudeGeometry(trapezoidShape, extrudeSettings);
+
+    // 加载 PBR 贴图
+    const textureLoader = new THREE.TextureLoader();
+    const aoMap = textureLoader.load('/img/Trash/layers/textures/concrete_layers_ao_4k.jpg');
+    const baseColorMap = textureLoader.load(
+      '/img/Trash/layers/textures/concrete_layers_diff_4k.jpg',
+    ); // Diffuse 颜色
+    const roughnessMap = textureLoader.load(
+      '/img/Trash/layers/textures/concrete_layers_rough_4k.exr',
+    ); // 粗糙度
+    const displacementMap = textureLoader.load(
+      '/img/Trash/layers/textures/concrete_layers_disp_4k.png',
+    ); // 置换贴图
+    // 加载法线贴图（GLTF 使用 OpenGL 方向的法线贴图）
+    const normalMap = new EXRLoader().load(
+      '/img/Trash/layers/textures/concrete_layers_nor_gl_4k.exr',
+    );
+    // 修复贴图间隙问题
+    baseColorMap.wrapS = THREE.ClampToEdgeWrapping;
+    baseColorMap.wrapT = THREE.ClampToEdgeWrapping;
+    baseColorMap.minFilter = THREE.LinearMipMapLinearFilter;
+    // **创建 PBR 材质**
     const tunnelMaterial = new THREE.MeshStandardMaterial({
-      color: 0x00ff00,
-      transparent: true,
-      opacity: 0.5,
-      // roughness: 0.7,
-      // metalness: 0.1,
+      side: THREE.DoubleSide, // 避免背面看不到
+      map: baseColorMap, // 颜色贴图
+      aoMap: aoMap, // 环境光遮蔽
+      roughnessMap: roughnessMap, // 粗糙度贴图
+      normalMap: normalMap, // 法线贴图
+      displacementMap: displacementMap, // 置换贴图
+      displacementScale: 0.1, // 置换高度
+      metalness: 0.0, // 水泥不反光
+      roughness: 1.0, // 增加粗糙度，减少反光
     });
+    // **应用材质到隧道**
     const tunnelMesh = new THREE.Mesh(tunnelGeometry, tunnelMaterial);
 
+    // **修复 AO 贴图的问题**
+    tunnelGeometry.setAttribute('uv2', tunnelGeometry.attributes.uv);
+    tunnelGeometry.computeVertexNormals();
     scene.add(tunnelMesh);
   };
 

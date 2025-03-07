@@ -1742,4 +1742,57 @@ const hole = [
   },
 ];
 
-export { partition, hole };
+const outline = [
+  {
+    type: 'POINT',
+    borderType: 'BORDER',
+    x: -198.997487421324,
+    y: 0,
+  },
+  {
+    type: 'ARC',
+    borderType: 'BORDER',
+    x: 0,
+    y: 300,
+    r: 360,
+    a1: 4.126703436927539,
+    a2: -0.9851107833377456,
+    startPoint: {
+      type: 'POINT',
+      borderType: 'NO',
+      x: -198.99748742132408,
+      y: 5.684341886080802e-14,
+    },
+    endPoint: {
+      type: 'POINT',
+      borderType: 'NO',
+      x: 198.99748742132402,
+      y: 0,
+    },
+    deltaTheta: 5.111814220265284,
+  },
+  {
+    type: 'POINT',
+    borderType: 'BORDER',
+    x: 198.997487421324,
+    y: 0,
+  },
+  {
+    type: 'LINE',
+    borderType: 'FLOOR',
+    p1: {
+      type: 'POINT',
+      borderType: 'BORDER',
+      x: 198.997487421324,
+      y: 0,
+    },
+    p2: {
+      type: 'POINT',
+      borderType: 'BORDER',
+      x: -198.997487421324,
+      y: 0,
+    },
+  },
+];
+
+export { partition, hole, outline };
