@@ -54,9 +54,9 @@ export function initAppConfigStore() {
   // init store
   localeStore.initLocale();
 
-  setTimeout(() => {
-    clearObsoleteStorage();
-  }, 16);
+  // setTimeout(() => {
+  //   clearObsoleteStorage();
+  // }, 16);
 }
 
 /**

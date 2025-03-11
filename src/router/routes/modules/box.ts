@@ -88,6 +88,15 @@ const box: AppRouteModule = {
         icon: 'simple-icons:boxdotme',
       },
     },
+    {
+      path: 'box-util-localforage',
+      name: 'box-util-localforage',
+      component: () => import('@/views/box/util/localforage.vue'),
+      meta: {
+        title: 'box-util-localforage',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
   ],
 };
 

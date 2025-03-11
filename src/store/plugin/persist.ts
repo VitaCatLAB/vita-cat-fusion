@@ -1,8 +1,6 @@
 /**
- * Pinia Persist Plugin
+ * Pinia Persist Plugin - 优化版
  * Pinia 持久化插件
- * @link https://prazdevs.github.io/pinia-plugin-persistedstate/zh/guide/
- *
  */
 import type { Pinia } from 'pinia';
 import { createPersistedState, Serializer } from 'pinia-plugin-persistedstate';
@@ -19,57 +17,118 @@ const persistEncryption: Encryption = EncryptionFactory.createAesEncryption({
 });
 
 /**
- * Custom serializer for serialization and deserialization of storage data
- * 自定义序列化器，用于序列化和反序列化存储数据
- *
- * @param shouldEnableEncryption whether to enable encryption for storage data 是否启用存储数据加密
- * @returns serializer
+ * 自定义序列化器
+ * @param shouldEnableEncryption 是否加密
+ * @returns Serializer
  */
 function customSerializer(shouldEnableEncryption: boolean): Serializer {
   if (shouldEnableEncryption) {
     return {
       deserialize: (value) => {
-        const decrypted = persistEncryption.decrypt(value);
-        return JSON.parse(decrypted);
+        if (!value) return null;
+        try {
+          const decrypted = persistEncryption.decrypt(value);
+          return JSON.parse(decrypted);
+        } catch (error) {
+          console.warn('数据解密失败:', error);
+          return null;
+        }
       },
       serialize: (value) => {
-        const serialized = JSON.stringify(value);
-        return persistEncryption.encrypt(serialized);
+        try {
+          const serialized = JSON.stringify(value);
+          return persistEncryption.encrypt(serialized);
+        } catch (error) {
+          console.warn('数据加密失败:', error);
+          return '';
+        }
       },
     };
   } else {
     return {
       deserialize: (value) => {
-        return JSON.parse(value);
+        if (!value) return null;
+        try {
+          return JSON.parse(value);
+        } catch (error) {
+          console.warn('JSON 解析失败:', error);
+          return null;
+        }
       },
       serialize: (value) => {
-        return JSON.stringify(value);
+        try {
+          return JSON.stringify(value);
+        } catch (error) {
+          console.warn('JSON 序列化失败:', error);
+          return '';
+        }
       },
     };
   }
 }
 
 /**
- * Register Pinia Persist Plugin
- * 注册 Pinia 持久化插件
- *
- * @param pinia Pinia instance Pinia 实例
+ * 安全的存储操作
  */
-export function registerPiniaPersistPlugin(pinia: Pinia) {
-  pinia.use(createPersistedState(createPersistedStateOptions(PERSIST_KEY_PREFIX)));
-}
+const safeStorage = {
+  getItem(storage: Storage, key: string) {
+    try {
+      return storage.getItem(key);
+    } catch (error) {
+      console.warn(`读取存储失败: ${error}`);
+      return null;
+    }
+  },
+  setItem(storage: Storage, key: string, value: string) {
+    try {
+      storage.setItem(key, value);
+    } catch (error) {
+      console.warn(`存储失败，可能是存储空间已满或浏览器限制: ${error}`);
+    }
+  },
+};
 
 /**
- * Create Persisted State Options
- * 创建持久化状态选项
- *
- * @param keyPrefix prefix for storage key 储存键前缀
- * @returns persisted state factory options
+ * 创建 Pinia 持久化状态选项
+ * @param keyPrefix 存储键前缀
+ * @param storageType localStorage 或 sessionStorage
  */
-export function createPersistedStateOptions(keyPrefix: string): PersistedStateFactoryOptions {
+export function createPersistedStateOptions(
+  keyPrefix: string,
+  storageType: Storage = localStorage,
+): PersistedStateFactoryOptions {
   return {
-    storage: localStorage,
+    storage: {
+      getItem: (key) => safeStorage.getItem(storageType, key),
+      setItem: (key, value) => safeStorage.setItem(storageType, key, value),
+    },
     key: (id) => `${keyPrefix}__${id}`,
     serializer: customSerializer(SHOULD_ENABLE_STORAGE_ENCRYPTION),
   };
+}
+
+/**
+ * 注册 Pinia 持久化插件
+ * @param pinia Pinia 实例
+ * @param storageType localStorage 或 sessionStorage
+ */
+export function registerPiniaPersistPlugin(pinia: Pinia, storageType: Storage = localStorage) {
+  pinia.use(createPersistedState(createPersistedStateOptions(PERSIST_KEY_PREFIX, storageType)));
+
+  // 处理 sessionStorage 多 TAB 同步
+  if (storageType === sessionStorage) {
+    const channel = new BroadcastChannel('pinia-session-sync');
+
+    channel.onmessage = (event) => {
+      if (event.data && event.data.key && event.data.value !== undefined) {
+        safeStorage.setItem(sessionStorage, event.data.key, event.data.value);
+      }
+    };
+
+    window.addEventListener('storage', (event) => {
+      if (event.storageArea === sessionStorage && event.key) {
+        channel.postMessage({ key: event.key, value: event.newValue });
+      }
+    });
+  }
 }

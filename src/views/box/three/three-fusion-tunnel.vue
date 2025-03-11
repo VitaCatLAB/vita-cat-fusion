@@ -15,10 +15,15 @@
   let camera: THREE.PerspectiveCamera | THREE.OrthographicCamera; // 相机（可切换）
   let controls: OrbitControls | null = null; // 轨道控制器
   const isPerspective = ref(false); // 是否使用透视相机
+  const open = ref(false);
   const size = ref(3); // 视野范围
   let stats: Stats; // 性能监测工具
   const config: any = { closed: false, curveType: 'centripetal', tension: 0.5 };
-
+  // 用于存储所有的 Mesh
+  let holeMeshes: THREE.Mesh[] = []; // 存储所有的物体
+  let previousHoveredMesh: THREE.Mesh | null = null; // 存储上一个悬停的物体
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
   // 初始化 Three.js 场景
   const initScene = () => {
     if (!containerRef.value) return;
@@ -140,17 +145,79 @@
     // 重新生成图形
     addTunnel();
   };
+
+  const onMouseClick = (event) => {
+    // 监听鼠标点击事件
+
+    // 计算鼠标位置 (-1 ~ 1)
+    const rect = renderer?.domElement.getBoundingClientRect();
+    if (rect) {
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      // 进行射线检测
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(holeMeshes);
+
+      // 如果点击到物体，改变颜色
+      if (intersects.length > 0) {
+        const clickedMesh = intersects[0].object as THREE.Mesh;
+        clickedMesh.material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+      }
+    }
+  };
+
+  const onMouseMove = (event) => {
+    // 监听鼠标移动事件
+    // 计算鼠标坐标 (-1 ~ 1)
+
+    const rect = renderer?.domElement.getBoundingClientRect();
+    if (rect) {
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(holeMeshes);
+
+      if (intersects.length > 0) {
+        const hoveredMesh = intersects[0].object as THREE.Mesh;
+
+        // 如果当前悬浮的物体不是之前的物体
+        if (previousHoveredMesh !== hoveredMesh) {
+          // 先恢复上一个物体的颜色
+          if (previousHoveredMesh) {
+            previousHoveredMesh.material = new THREE.MeshBasicMaterial({ color: 0x0000ff }); // 恢复蓝色
+          }
+          // 设置新物体颜色
+          hoveredMesh.material = new THREE.MeshBasicMaterial({ color: 0xffff00 }); // 变为黄色
+          previousHoveredMesh = hoveredMesh;
+        }
+      } else {
+        // 鼠标未悬浮任何物体，恢复上一个悬浮的物体颜色
+        if (previousHoveredMesh) {
+          previousHoveredMesh.material = new THREE.MeshBasicMaterial({ color: 0x0000ff }); // 恢复蓝色
+          previousHoveredMesh = null;
+        }
+      }
+    }
+  };
   // Vue 组件挂载时初始化 Three.js 场景
   onMounted(() => {
     nextTick(() => {
       initScene();
       window.addEventListener('resize', onWindowResize);
+      window.addEventListener('click', onMouseClick);
+      window.addEventListener('mousemove', onMouseMove);
     });
   });
 
   // Vue 组件卸载时清理资源
   onUnmounted(() => {
     window.removeEventListener('resize', onWindowResize);
+    window.removeEventListener('click', onMouseClick);
+
+    window.removeEventListener('mousemove', onMouseMove);
+
     controls?.dispose();
     renderer?.dispose();
     renderer = null;
@@ -202,6 +269,9 @@
         // 创建网格并添加到场景中
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
+
+        // 存入数组，便于管理
+        holeMeshes.push(mesh);
       }
     }
   };
@@ -336,9 +406,8 @@
       color: 0x00ff00,
       transparent: true,
       opacity: 0.5,
-      // roughness: 0.7,
-      // metalness: 0.1,
     });
+
     const tunnelMesh = new THREE.Mesh(tunnelGeometry, tunnelMaterial);
 
     scene.add(tunnelMesh);
@@ -438,6 +507,7 @@
       <button @click="addCircle">添加圆</button>
 
       <button @click="clearCanvas">清空画布</button>
+      <button @click="open = true">Open Modal</button>
     </div>
     <div class="canvas-wrapper" ref="containerRef"></div>
   </div>
@@ -462,5 +532,15 @@
     width: 90%;
     height: 80vh;
     border: 1px solid #ccc;
+  }
+
+  .modal {
+    position: fixed;
+    z-index: 999;
+    top: 20%;
+    left: 50%;
+    width: 300px;
+    margin-left: -150px;
+    border: 1px solid #000;
   }
 </style>
