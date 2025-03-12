@@ -97,6 +97,15 @@ const box: AppRouteModule = {
         icon: 'simple-icons:boxdotme',
       },
     },
+    {
+      path: 'box-util-error',
+      name: 'box-util-error',
+      component: () => import('@/views/box/util/error.vue'),
+      meta: {
+        title: 'box-util-error',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
   ],
 };
 

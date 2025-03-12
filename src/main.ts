@@ -15,11 +15,15 @@ import { initAppConfigStore } from '@/logics/initAppConfig';
 import { router, setupRouter } from '@/router';
 import { setupRouterGuard } from '@/router/guard';
 import { setupStore } from '@/store';
-
+import * as Sentry from '@sentry/vue';
 import App from './App.vue';
 
 async function bootstrap() {
   const app = createApp(App);
+  Sentry.init({
+    app,
+    dsn: 'https://89764a3705d2747506ea7ceb4a058fe5@o4508963696476160.ingest.us.sentry.io/4508963698311168',
+  });
 
   // Configure store
   // 配置 store
