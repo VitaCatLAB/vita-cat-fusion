@@ -171,6 +171,8 @@ const setting: ProjectConfig = {
   // Use error-handler-plugin
   useErrorHandle: false,
 
+  useSentry: true,
+
   // Whether to open back to top
   useOpenBackTop: true,
 

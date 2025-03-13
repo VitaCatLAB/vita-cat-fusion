@@ -21,6 +21,7 @@
   import { Description, DescItem, useDescription } from '@/components/Description';
   import { GITHUB_URL, SITE_URL, DOC_URL } from '@/settings/siteSetting';
   import { useBakStore } from '@/store/modules/bak';
+  import { getEnv, isDevMode } from '@/utils/env';
 
   const bakStore = useBakStore();
   bakStore.setText();
@@ -36,6 +37,16 @@
   const commonLinkRender = (text: string) => (href) => h('a', { href, target: '_blank' }, text);
 
   const infoSchema: DescItem[] = [
+    {
+      label: '当前环境',
+      field: 'getEnv',
+      render: commonTagRender('blue'),
+    },
+    {
+      label: '当前MODE',
+      field: 'getMode',
+      render: commonTagRender('blue'),
+    },
     {
       label: '版本',
       field: 'version',
@@ -70,6 +81,8 @@
   ];
 
   const infoData = {
+    getEnv: isDevMode() ? '开发环境' : '生产环境',
+    getMode: getEnv(),
     version,
     lastBuildTime,
     doc: DOC_URL,

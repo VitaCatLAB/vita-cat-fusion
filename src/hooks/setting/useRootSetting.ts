@@ -33,6 +33,8 @@ export function useRootSetting() {
 
   const getUseErrorHandle = computed(() => appStore.getProjectConfig.useErrorHandle);
 
+  const getUseSentry = computed(() => appStore.getProjectConfig.useSentry);
+
   const getShowFooter = computed(() => appStore.getProjectConfig.showFooter);
 
   const getShowBreadCrumb = computed(() => appStore.getProjectConfig.showBreadCrumb);
@@ -80,6 +82,7 @@ export function useRootSetting() {
     getPermissionMode,
     getShowLogo,
     getUseErrorHandle,
+    getUseSentry,
     getShowBreadCrumb,
     getShowBreadCrumbIcon,
     getUseOpenBackTop,

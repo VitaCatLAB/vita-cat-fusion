@@ -8,6 +8,7 @@ import { createAppConfigPlugin } from './appConfig';
 import { configCompressPlugin } from './compress';
 import { configHtmlPlugin } from './html';
 import { configMockPlugin } from './mock';
+import { configSentryVitePlugin } from './sentry';
 import { configSvgIconsPlugin } from './svgSprite';
 import { configVisualizerConfig } from './visualizer';
 
@@ -17,9 +18,17 @@ interface Options {
   compress: string;
   enableMock?: boolean;
   enableAnalyze?: boolean;
+  sentryDsn?: string;
 }
 
-async function createPlugins({ isBuild, root, enableMock, compress, enableAnalyze }: Options) {
+async function createPlugins({
+  isBuild,
+  root,
+  enableMock,
+  compress,
+  enableAnalyze,
+  sentryDsn,
+}: Options) {
   const vitePlugins: (PluginOption | PluginOption[])[] = [vue(), vueJsx()];
 
   const appConfigPlugin = await createAppConfigPlugin({ root, isBuild });
@@ -35,6 +44,11 @@ async function createPlugins({ isBuild, root, enableMock, compress, enableAnalyz
 
   // vite-plugin-purge-icons
   vitePlugins.push(purgeIcons());
+
+  // vite-plugin-sentry
+  if (isBuild && sentryDsn) {
+    vitePlugins.push(configSentryVitePlugin({ isBuild }));
+  }
 
   // The following plugins only work in the production environment
   if (isBuild) {

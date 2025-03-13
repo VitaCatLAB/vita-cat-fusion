@@ -128,6 +128,8 @@ export interface ProjectConfig {
   showBreadCrumbIcon: boolean;
   // Use error-handler-plugin
   useErrorHandle: boolean;
+  //use sentry
+  useSentry: boolean;
   // Whether to open back to top
   useOpenBackTop: boolean;
   // Is it possible to embed iframe pages
@@ -149,6 +151,7 @@ export interface GlobConfig {
   urlPrefix?: string;
   // Project abbreviation
   shortName: string;
+  sentryDsn?: string;
 }
 export interface GlobEnvConfig {
   // Site title
@@ -159,4 +162,5 @@ export interface GlobEnvConfig {
   VITE_GLOB_API_URL_PREFIX?: string;
   // Upload url
   VITE_GLOB_UPLOAD_URL?: string;
+  VITE_GLOB_SENTRY_DSN?: string;
 }

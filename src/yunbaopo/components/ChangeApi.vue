@@ -37,6 +37,7 @@
   // perf 能读取所有.env.xxx文件最好, 另外key与--mode XXX最好相同
   const addresses = ref({
     development: '/dev-api',
+    basic: '/basic-api',
     sunyanfeng: 'http://192.168.31.80:48080',
     liyang: 'http://192.168.31.249:48080',
     gengyi: 'http://192.168.31.239:48080',
