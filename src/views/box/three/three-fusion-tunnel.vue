@@ -7,7 +7,7 @@
   import { hole, outline } from '@/yunbaopo/graphics/data';
   import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
   import Stats from 'three/examples/jsm/libs/stats.module.js';
-
+  import InfoBox from './InfoBox.vue';
   // 绑定 Vue 组件的 DOM 容器
   const containerRef = ref<HTMLDivElement | null>(null);
   let renderer: THREE.WebGLRenderer | null = null; // WebGL 渲染器
@@ -22,6 +22,11 @@
   // 用于存储所有的 Mesh
   let holeMeshes: THREE.Mesh[] = []; // 存储所有的物体
   let previousHoveredMesh: THREE.Mesh | null = null; // 存储上一个悬停的物体
+  let selectedMesh: THREE.Mesh | null = null;
+  // 选中的 Mesh 信息
+  const selectedMeshData = ref(null);
+  const infoBoxVisible = ref(false);
+  const infoBoxPosition = ref({ x: 0, y: 0 });
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   // 初始化 Three.js 场景
@@ -147,30 +152,44 @@
   };
 
   const onMouseClick = (event) => {
-    // 监听鼠标点击事件
-
-    // 计算鼠标位置 (-1 ~ 1)
     const rect = renderer?.domElement.getBoundingClientRect();
     if (rect) {
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
-      // 进行射线检测
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(holeMeshes);
 
-      // 如果点击到物体，改变颜色
       if (intersects.length > 0) {
         const clickedMesh = intersects[0].object as THREE.Mesh;
-        clickedMesh.material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        selectedMeshData.value = {
+          position: clickedMesh.position,
+          scale: clickedMesh.scale,
+          rotation: clickedMesh.rotation,
+        } as any;
+        // 设置对话框位置
+        infoBoxPosition.value = { x: event.clientX + 10, y: event.clientY + 10 };
+        infoBoxVisible.value = true;
+        if (selectedMesh !== clickedMesh) {
+          // 先恢复之前选中的物体颜色
+          if (selectedMesh) {
+            (selectedMesh.material as THREE.MeshBasicMaterial).color.set(0x0000ff);
+          }
+          // 设置新物体颜色
+          (clickedMesh.material as THREE.MeshBasicMaterial).color.set(0xff0000);
+          selectedMesh = clickedMesh;
+        }
+      } else {
+        infoBoxVisible.value = false;
+        // 点击空白处，恢复所有物体颜色
+        if (selectedMesh) {
+          (selectedMesh.material as THREE.MeshBasicMaterial).color.set(0x0000ff);
+          selectedMesh = null;
+        }
       }
     }
   };
-
   const onMouseMove = (event) => {
-    // 监听鼠标移动事件
-    // 计算鼠标坐标 (-1 ~ 1)
-
     const rect = renderer?.domElement.getBoundingClientRect();
     if (rect) {
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -182,22 +201,25 @@
       if (intersects.length > 0) {
         const hoveredMesh = intersects[0].object as THREE.Mesh;
 
-        // 如果当前悬浮的物体不是之前的物体
         if (previousHoveredMesh !== hoveredMesh) {
-          // 先恢复上一个物体的颜色
-          if (previousHoveredMesh) {
-            previousHoveredMesh.material = new THREE.MeshBasicMaterial({ color: 0x0000ff }); // 恢复蓝色
+          // 先恢复上一个悬浮的物体颜色（除非它是选中的红色物体）
+          if (previousHoveredMesh && previousHoveredMesh !== selectedMesh) {
+            (previousHoveredMesh.material as THREE.MeshBasicMaterial).color.set(0x0000ff);
           }
-          // 设置新物体颜色
-          hoveredMesh.material = new THREE.MeshBasicMaterial({ color: 0xffff00 }); // 变为黄色
+
+          // 设置新物体颜色（除非它是选中的红色物体）
+          if (hoveredMesh !== selectedMesh) {
+            (hoveredMesh.material as THREE.MeshBasicMaterial).color.set(0xffff00);
+          }
+
           previousHoveredMesh = hoveredMesh;
         }
       } else {
-        // 鼠标未悬浮任何物体，恢复上一个悬浮的物体颜色
-        if (previousHoveredMesh) {
-          previousHoveredMesh.material = new THREE.MeshBasicMaterial({ color: 0x0000ff }); // 恢复蓝色
-          previousHoveredMesh = null;
+        // 如果鼠标移开，恢复悬浮的物体颜色（除非它是选中的红色物体）
+        if (previousHoveredMesh && previousHoveredMesh !== selectedMesh) {
+          (previousHoveredMesh.material as THREE.MeshBasicMaterial).color.set(0x0000ff);
         }
+        previousHoveredMesh = null;
       }
     }
   };
@@ -510,6 +532,12 @@
       <button @click="open = true">Open Modal</button>
     </div>
     <div class="canvas-wrapper" ref="containerRef"></div>
+    <InfoBox
+      v-if="infoBoxVisible"
+      :visible="infoBoxVisible"
+      :position="infoBoxPosition"
+      :data="selectedMeshData as any"
+    />
   </div>
 </template>
 

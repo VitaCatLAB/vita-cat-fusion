@@ -6,6 +6,7 @@
       <button @click="endSignature">结束签名</button>
       <button @click="saveSignature">保存签名</button>
       <button @click="saveTransparentSignature">保存透明签名</button>
+      <button @click="saveSvgWithOffset">保存为SVG</button>
       <button @click="clearSignature">清除签名</button>
       <button @click="resetCanvas">重置画布</button>
       <button @click="clearCanvas">清空画布</button>
@@ -35,6 +36,54 @@
   // 结束签名模式
   const endSignature = () => {
     fabricRender.canvas.isDrawingMode = false;
+  };
+
+  //保存为svg
+  const saveSvgWithOffset = () => {
+    const offsetX = 0;
+    const offsetY = 100;
+
+    // 获取画布 JSON 数据
+    let json = fabricRender.canvas.toObject();
+
+    console.log(json);
+
+    json.objects.forEach((obj) => {
+      if (obj.type === 'path') {
+        // 偏移整体的 left 和 top
+        obj.left += offsetX;
+        obj.top += offsetY;
+
+        // 偏移 path 内的所有点
+        obj.path = obj.path.map((command) => {
+          return command.map((val, index) => {
+            // 跳过第一个值（M、L、Q等命令），仅对坐标进行偏移
+            if (index === 0) return val;
+            return index % 2 === 1 ? val + offsetX : val + offsetY;
+          });
+        });
+
+        // 创建新的路径对象
+        const newPath = new fabric.Path(obj.path, {
+          left: obj.left,
+          top: obj.top,
+          stroke: obj.stroke,
+          strokeWidth: obj.strokeWidth,
+          strokeLineCap: obj.strokeLineCap,
+          strokeLineJoin: obj.strokeLineJoin,
+          strokeMiterLimit: obj.strokeMiterLimit,
+          fill: obj.fill,
+          opacity: obj.opacity,
+          visible: obj.visible,
+        });
+
+        // 添加到原画布
+        fabricRender.canvas.add(newPath);
+      }
+    });
+
+    // 渲染更新后的画布
+    fabricRender.canvas.renderAll();
   };
 
   // 保存签名为图片
