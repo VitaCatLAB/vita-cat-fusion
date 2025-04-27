@@ -60,6 +60,15 @@ const box: AppRouteModule = {
       },
     },
     {
+      path: 'fabric-fusion-blast2',
+      name: 'box-fabric-fusion-blast2',
+      component: () => import('@/views/box/fabric/fabric-fusion-blast2.vue'),
+      meta: {
+        title: 'fabric-fusion-blast2',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
+    {
       path: 'fabric-fusion-mask',
       name: 'box-fabric-fusion-mask',
       component: () => import('@/views/box/fabric/fabric-fusion-mask.vue'),

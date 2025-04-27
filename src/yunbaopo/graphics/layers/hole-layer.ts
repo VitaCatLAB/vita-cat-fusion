@@ -70,7 +70,7 @@ export const generateHoles = (
       if (config.showText) {
         text = new fabric.Text(hole.name.toString(), {
           left: hole.x,
-          top: hole.y - config.radius - 5, // 文字稍微上移
+          top: hole.y, // 文字稍微上移
           fontWeight: 800,
           fontSize: config.textSize,
           originX: 'center',
@@ -91,6 +91,9 @@ export const generateHoles = (
         hoverCursor: 'pointer',
         metaData: { hole },
         selectable: config.selectable,
+        tooltip: `${hole.name}\n${hole.x},${hole.y}`,
+
+        tooltipPosition: 'BR', // 右下角弹出
       } as any);
 
       // 添加点击事件监听器
