@@ -2,6 +2,7 @@ import { holeGroupProcessor } from '@/yunbaopo/processors/hole-processor';
 import { hole } from '../data';
 import { fabric } from '@fabric-fusion/core';
 import _ from 'lodash';
+import { genHoleName } from '../utils';
 
 /**
  * @description 生成炮孔 Fabric.js 对象列表，每个炮孔是独立的 `fabric.Group`
@@ -92,8 +93,8 @@ export const generateHoles = (
         metaData: { hole },
         selectable: config.selectable,
         tooltip: `${hole.name}\n${hole.x},${hole.y}`,
-
         tooltipPosition: 'BR', // 右下角弹出
+        name: genHoleName(),
       } as any);
 
       // 添加点击事件监听器

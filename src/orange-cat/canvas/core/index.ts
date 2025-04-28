@@ -1,4 +1,5 @@
 export * from './fabric-render';
+export * from './fabric-layer-manager';
 export * from './type';
 export * from './utils/index';
 // export * from './events';

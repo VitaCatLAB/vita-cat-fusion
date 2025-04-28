@@ -12,6 +12,13 @@
     </div>
 
     <div class="canvas-wrapper" ref="containerRef">
+      <!-- <div
+        v-if="tooltip.visible"
+        :class="['tooltip', `tooltip-${tooltip.position}`, { 'tooltip-visible': tooltip.visible }]"
+        :style="tooltipStyle"
+      >
+        <pre>{{ tooltip.content }}</pre>
+      </div> -->
       <!-- Tooltip 组件 -->
       <Tooltip
         :visible="tooltip.visible"
@@ -28,13 +35,8 @@
 <script lang="ts" setup>
   // region 模块导入
   import { ref, onMounted, onUnmounted, watch, computed, reactive } from 'vue';
-  import {
-    FabricRender,
-    fabric,
-    FabricLayerManager,
-    FabricObjectWithLayer,
-  } from '@fabric-fusion/core';
-  // import { FabricRender, fabric, FabricLayerManager, FabricObjectWithLayer } from '@/orange-cat';
+  // import { FabricRender, fabric } from '@fabric-fusion/core';
+  import { FabricRender, fabric, FabricLayerManager, FabricObjectWithLayer } from '@/orange-cat';
   import { generateHoles } from '@/yunbaopo/graphics/layers/hole-layer';
   import { generatePartition } from '@/yunbaopo/graphics/layers/partition-layer';
   import { message } from 'ant-design-vue';
@@ -56,6 +58,47 @@
   // region store绑定
   const graphStore = useGraphStore();
   const { canvas: graphCanvas, text } = storeToRefs(graphStore);
+  // endregion
+
+  // region 提示框管理
+  // const tooltip = reactive({
+  //   visible: false,
+  //   content: '',
+  //   x: 0,
+  //   y: 0,
+  //   position: 'TL' as 'TL' | 'TR' | 'BL' | 'BR', // 默认位置：左上
+  // });
+
+  // const tooltipStyle = computed(() => {
+  //   let offsetX = 0;
+  //   let offsetY = 0;
+
+  //   switch (tooltip.position) {
+  //     case 'TL':
+  //     case 'BL':
+  //       offsetX = -10;
+  //       break;
+  //     case 'TR':
+  //     case 'BR':
+  //       offsetX = 10;
+  //       break;
+  //   }
+  //   switch (tooltip.position) {
+  //     case 'TL':
+  //     case 'TR':
+  //       offsetY = -10;
+  //       break;
+  //     case 'BL':
+  //     case 'BR':
+  //       offsetY = 10;
+  //       break;
+  //   }
+
+  //   return {
+  //     top: `${tooltip.y + offsetY}px`,
+  //     left: `${tooltip.x + offsetX}px`,
+  //   };
+  // });
   // endregion
 
   // region 画布管理
@@ -249,6 +292,25 @@
    */
   const handleMouseMove = (opt: fabric.IEvent) => {
     tooltipMouseMove(opt, mainRender.canvas);
+    // const target = opt.target as any;
+    // if (target && target.tooltip) {
+    //   const pointer = mainRender.canvas.getPointer(opt.e);
+    //   tooltip.visible = true;
+    //   tooltip.content = target.tooltip;
+    //   const viewportTransform = mainRender.canvas.viewportTransform;
+    //   if (viewportTransform) {
+    //     const centerPoint = new fabric.Point(target.left ?? 0, target.top ?? 0);
+    //     const transformedPoint = fabric.util.transformPoint(centerPoint, viewportTransform);
+    //     tooltip.x = transformedPoint.x;
+    //     tooltip.y = transformedPoint.y;
+    //   } else {
+    //     tooltip.x = target.left ?? 0;
+    //     tooltip.y = target.top ?? 0;
+    //   }
+    //   tooltip.position = target.tooltipPosition || 'TL';
+    // } else {
+    //   tooltip.visible = false;
+    // }
   };
 
   /**
@@ -256,6 +318,7 @@
    */
   const handleMouseOut = () => {
     tooltipMouseOut();
+    // tooltip.visible = false;
   };
   // endregion
 
@@ -327,5 +390,42 @@
     width: 100%;
     height: 600px;
     border: 1px solid #ccc;
+  }
+
+  .tooltip {
+    position: absolute;
+    z-index: 10;
+    padding: 8px 12px;
+    transform: translateY(-10px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+    border-radius: 4px;
+    opacity: 0;
+    background: rgb(50 50 50 / 85%);
+    color: #fff;
+    font-size: 12px;
+    white-space: pre-wrap;
+    pointer-events: none;
+  }
+
+  .tooltip-TL {
+    transform: translate(-10px, -10px);
+  }
+
+  .tooltip-TR {
+    transform: translate(10px, -10px);
+  }
+
+  .tooltip-BL {
+    transform: translate(-10px, 10px);
+  }
+
+  .tooltip-BR {
+    transform: translate(10px, 10px);
+  }
+
+  .tooltip-visible {
+    opacity: 1;
   }
 </style>

@@ -1,5 +1,6 @@
 import { DEFAULT_BACKGROUND_COLOR, DEBOUNCE_DELAY } from './config';
 import { registerCanvasEvents } from './events';
+import { FabricLayerManager } from './fabric-layer-manager';
 import _fabric from 'fabric';
 
 export const fabric = _fabric.fabric;
@@ -16,7 +17,7 @@ export class FabricRender {
   private resizeObserver: ResizeObserver | null = null; // ResizeObserver 实例
   private debouncedResize: (event: UIEvent) => void; // 防抖后的调整函数
   private fixedObjects: Set<fabric.Object> = new Set(); // 存储固定大小的对象
-
+  public layerManager?: FabricLayerManager; // 新增
   constructor() {
     this.debouncedResize = this.debounce(this.adjustCanvasSize.bind(this), DEBOUNCE_DELAY); // 初始化防抖函数
   }
@@ -44,6 +45,8 @@ export class FabricRender {
     });
 
     fabric.textureSize = 8192;
+    // 新增：初始化 layerManager
+    this.layerManager = new FabricLayerManager(this.canvas);
     // 添加默认监听事件
     if (options.enableDefaultListeners) {
       registerCanvasEvents(this.canvas);
