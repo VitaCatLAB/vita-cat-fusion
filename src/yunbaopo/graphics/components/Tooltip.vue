@@ -76,30 +76,39 @@
 <style scoped>
   .tooltip {
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
+    z-index: 10;
+    padding: 8px 12px;
+    transform: translateY(-10px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
     border-radius: 4px;
-    padding: 5px;
-    z-index: 100;
-  }
-  .tooltip-visible {
-    opacity: 1;
-    transition: opacity 0.2s ease-in-out;
-  }
-  .tooltip-TL {
-    transform: translate(-10px, -10px);
-  }
-  .tooltip-TR {
-    transform: translate(10px, -10px);
-  }
-  .tooltip-BL {
-    transform: translate(-10px, 10px);
-  }
-  .tooltip-BR {
-    transform: translate(10px, 10px);
+    opacity: 0;
+    background: rgb(50 50 50 / 85%);
+    color: #fff;
+    font-size: 12px;
+    white-space: pre-wrap;
+    pointer-events: none;
   }
 
   .tooltip-visible {
+    transition: opacity 0.2s ease-in-out;
     opacity: 1;
+  }
+
+  .tooltip-TL {
+    transform: translate(-10px, -10px);
+  }
+
+  .tooltip-TR {
+    transform: translate(10px, -10px);
+  }
+
+  .tooltip-BL {
+    transform: translate(-10px, 10px);
+  }
+
+  .tooltip-BR {
+    transform: translate(10px, 10px);
   }
 </style>
