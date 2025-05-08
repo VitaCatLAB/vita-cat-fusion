@@ -130,7 +130,7 @@
 
     mainRender.canvas.on('mouse:down', handlePolylineMouseDown);
     mainRender.canvas.on('mouse:move', handlePolylineMouseMove);
-    mainRender.canvas.on('mouse:down', handleRightClickToEnd); // 👈 增加右键监听
+    mainRender.canvas.on('mouse:down', handleRightClickToEnd); //  增加右键监听
 
     message.success('多段线绘制已开启（右键可结束）');
   };

@@ -93,6 +93,7 @@ export const generatePartition = (
       cornerSize: 6, // 设置控制点大小为 6
       hasControls: false, // 禁用控制点
       padding: 5, // 设置内边距为 5
+      selectable: false,
     });
 
     const data = {

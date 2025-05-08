@@ -17,7 +17,7 @@
 <script lang="ts" setup>
   import { ref, onMounted, onUnmounted } from 'vue';
   import { FabricRender, fabric } from '@fabric-fusion/core';
-  // import { FabricRender, fabric } from '@/orange-cat/canvas';
+
   import DemoImg from '@/assets/images/demo.png';
   import LogoImg from '@/assets/images/logo.png';
   import { message } from 'ant-design-vue';

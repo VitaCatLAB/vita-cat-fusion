@@ -107,8 +107,17 @@ const box: AppRouteModule = {
       },
     },
     {
-      path: 'three-fusion-tunnel-color',
-      name: 'box-three-fusion-tunnel',
+      path: 'three-fusion-cloud',
+      name: 'three-fusion-cloud',
+      component: () => import('@/views/box/three/three-fusion-tunnel-cloud.vue'),
+      meta: {
+        title: 'three-fusion-tunnel-cloud',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
+    {
+      path: 'three-fusion-color',
+      name: 'box-three-fusion-color',
       component: () => import('@/views/box/three/three-fusion-tunnel-color.vue'),
       meta: {
         title: 'three-fusion-tunnel-color',

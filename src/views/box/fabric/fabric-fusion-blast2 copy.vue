@@ -35,8 +35,12 @@
 <script lang="ts" setup>
   // region 模块导入
   import { ref, onMounted, onUnmounted, watch, computed, reactive } from 'vue';
-  // import { FabricRender, fabric } from '@fabric-fusion/core';
-  import { FabricRender, fabric, FabricLayerManager, FabricObjectWithLayer } from '@/orange-cat';
+  import {
+    FabricRender,
+    fabric,
+    FabricLayerManager,
+    FabricObjectWithLayer,
+  } from '@fabric-fusion/core';
   import { generateHoles } from '@/yunbaopo/graphics/layers/hole-layer';
   import { generatePartition } from '@/yunbaopo/graphics/layers/partition-layer';
   import { message } from 'ant-design-vue';
