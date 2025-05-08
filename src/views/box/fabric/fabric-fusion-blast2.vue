@@ -183,7 +183,7 @@
   };
 
   /**
-   * 初始化绘制图层
+   * 初始化绘制图层1
    */
   const drawInit = (layersToReset: string[] = ['partition', 'hole']) => {
     layersToReset.forEach((layer) => {
