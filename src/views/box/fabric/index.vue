@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
   import { ref, onMounted, onUnmounted } from 'vue';
-  import { FabricRender, fabric } from '@/orange-cat';
+  import { FabricRender, fabric } from '@fabric-fusion/core';
 
   // 定义容器和画布的引用
   const containerRef = ref<HTMLDivElement | null>(null);
