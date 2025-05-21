@@ -32,14 +32,15 @@ export const registerCanvasEvents = (
   window.addEventListener('keyup', keyUpHandler);
 
   // 缩放事件（滚轮）
-  const handleMouseWheel = (opt: any) => {
-    const delta = opt.e.deltaY;
+  const handleMouseWheel = (opt: fabric.IEvent<Event>) => {
+    const evt = opt.e as WheelEvent;
+    const delta = evt.deltaY;
     let zoom = canvas.getZoom();
     zoom *= 0.999 ** delta;
     zoom = Math.min(Math.max(zoom, ZOOM_RANGE.min), ZOOM_RANGE.max); // 限制缩放范围
 
     // console.log('opt', opt);
-    const pointer: fabric.IPoint = { x: opt.e.offsetX, y: opt.e.offsetY }; // 获取鼠标位置
+    const pointer: fabric.IPoint = { x: evt.offsetX, y: evt.offsetY }; // 获取鼠标位置
 
     canvas.zoomToPoint(pointer, zoom);
     opt.e.preventDefault();

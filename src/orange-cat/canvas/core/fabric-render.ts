@@ -9,6 +9,7 @@ export interface FabricRenderOptions extends fabric.ICanvasOptions {
   backgroundColor?: string;
   enableDefaultListeners?: boolean; // 是否启用默认监听事件
   customListeners?: Record<string, (opt: any) => void>; // 自定义事件监听器
+  panKey?: string; // 新增：拖动画布时使用的按键（例如 'Alt'、'Space'）
 }
 
 export class FabricRender {
@@ -17,7 +18,8 @@ export class FabricRender {
   private resizeObserver: ResizeObserver | null = null; // ResizeObserver 实例
   private debouncedResize: (event: UIEvent) => void; // 防抖后的调整函数
   private fixedObjects: Set<fabric.Object> = new Set(); // 存储固定大小的对象
-  public layerManager?: FabricLayerManager; // 新增
+  private cleanupCanvasEvents?: () => void; //  用来保存事件清理函数
+  public layerManager?: FabricLayerManager; //
   constructor() {
     this.debouncedResize = this.debounce(this.adjustCanvasSize.bind(this), DEBOUNCE_DELAY); // 初始化防抖函数
   }
@@ -49,7 +51,7 @@ export class FabricRender {
     this.layerManager = new FabricLayerManager(this.canvas);
     // 添加默认监听事件
     if (options.enableDefaultListeners) {
-      registerCanvasEvents(this.canvas);
+      this.cleanupCanvasEvents = registerCanvasEvents(this.canvas, options.panKey);
     }
 
     // 添加自定义监听事件
@@ -124,6 +126,12 @@ export class FabricRender {
 
     // 移除全局窗口监听
     window.removeEventListener('resize', this.debouncedResize as (event: UIEvent) => void);
+
+    // 新增：调用事件清理函数
+    if (this.cleanupCanvasEvents) {
+      this.cleanupCanvasEvents();
+      this.cleanupCanvasEvents = undefined;
+    }
   }
 
   /**

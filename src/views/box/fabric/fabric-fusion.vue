@@ -16,7 +16,8 @@
 
 <script lang="ts" setup>
   import { ref, onMounted, onUnmounted } from 'vue';
-  import { FabricRender, fabric } from '@fabric-fusion/core';
+  // import { FabricRender, fabric } from '@fabric-fusion/core';
+  import { FabricRender, fabric } from '@/orange-cat';
 
   // 定义容器和画布的引用
   const containerRef = ref<HTMLDivElement | null>(null);
@@ -101,6 +102,7 @@
         {
           backgroundColor: '#f9f9f9', // 设置画布背景颜色
           enableDefaultListeners: true, // 启用默认事件监听器
+          panKey: ' ',
           customListeners: {
             'mouse:down': customMouseDownHandler, // 添加自定义的鼠标点击事件
           },
