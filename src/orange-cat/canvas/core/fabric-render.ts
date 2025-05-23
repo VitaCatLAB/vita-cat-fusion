@@ -10,6 +10,8 @@ export interface FabricRenderOptions extends fabric.ICanvasOptions {
   enableDefaultListeners?: boolean; // 是否启用默认监听事件
   customListeners?: Record<string, (opt: any) => void>; // 自定义事件监听器
   panKey?: string; // 新增：拖动画布时使用的按键（例如 'Alt'、'Space'）
+  minZoom?: number;
+  maxZoom?: number;
 }
 
 export class FabricRender {
@@ -51,7 +53,12 @@ export class FabricRender {
     this.layerManager = new FabricLayerManager(this.canvas);
     // 添加默认监听事件
     if (options.enableDefaultListeners) {
-      this.cleanupCanvasEvents = registerCanvasEvents(this.canvas, options.panKey);
+      this.cleanupCanvasEvents = registerCanvasEvents(
+        this.canvas,
+        options.panKey,
+        options.minZoom,
+        options.maxZoom,
+      );
     }
 
     // 添加自定义监听事件

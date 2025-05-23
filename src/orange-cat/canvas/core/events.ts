@@ -9,6 +9,8 @@ import { ZOOM_RANGE } from './config';
 export const registerCanvasEvents = (
   canvas: fabric.Canvas,
   panKey: string = 'Alt',
+  minZoom: number = ZOOM_RANGE.min,
+  maxZoom: number = ZOOM_RANGE.max,
 ): (() => void) => {
   let isDragging = false;
   let lastPosX = 0;
@@ -36,7 +38,7 @@ export const registerCanvasEvents = (
     const delta = opt.e.deltaY;
     let zoom = canvas.getZoom();
     zoom *= 0.999 ** delta;
-    zoom = Math.min(Math.max(zoom, ZOOM_RANGE.min), ZOOM_RANGE.max); // 限制缩放范围
+    zoom = Math.min(Math.max(zoom, minZoom), maxZoom); // 限制缩放范围
 
     // console.log('opt', opt);
     const pointer: fabric.IPoint = { x: opt.e.offsetX, y: opt.e.offsetY }; // 获取鼠标位置
