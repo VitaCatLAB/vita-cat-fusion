@@ -8,6 +8,7 @@
     "url": "https://hean.im"
   },
   "type": "module",
+  "main": "dist/main/build.js",
   "scripts": {
     "bootstrap": "pnpm install",
     "build": "cross-env NODE_ENV=production NODE_OPTIONS=--max-old-space-size=8192 pnpm vite build",
@@ -84,6 +85,7 @@
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.10",
     "echarts": "^5.5.0",
+    "electron-is-dev": "^3.0.1",
     "exceljs": "^4.4.0",
     "fabric": "^5.5.1",
     "html2canvas": "^1.4.1",
@@ -161,5 +163,45 @@
   "engines": {
     "node": ">=18.12.0",
     "pnpm": ">=9.0.2"
+  },
+  "build": {
+    "appId": "xxx@gmail.com",
+    "electronDownload": {
+      "mirror": "https://npmmirror.com/mirrors/electron/"
+    },
+    "files": [
+      "!node_modules",
+      "dist/**"
+    ],
+    "asar": false,
+    "mac": {
+      "artifactName": "${productName}_setup_${version}.${ext}",
+      "target": [
+        "dmg"
+      ]
+    },
+    "linux": {
+      "icon": "build/icons/512x512.png",
+      "target": [
+        "deb"
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}_setup_${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false
+    }
   }
 }
