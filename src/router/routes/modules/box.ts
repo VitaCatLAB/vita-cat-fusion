@@ -125,6 +125,15 @@ const box: AppRouteModule = {
       },
     },
     {
+      path: 'three-fusion-pcd',
+      name: 'box-three-fusion-pcd',
+      component: () => import('@/views/box/three/three-fusion-pcd.vue'),
+      meta: {
+        title: 'three-fusion-pcd',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
+    {
       path: 'box-util-localforage',
       name: 'box-util-localforage',
       component: () => import('@/views/box/util/localforage.vue'),
