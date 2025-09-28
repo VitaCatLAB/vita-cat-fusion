@@ -1,0 +1,5 @@
+.axis-label {
+  font-family: Arial, sans-serif;
+  user-select: none;
+  pointer-events: none;
+}

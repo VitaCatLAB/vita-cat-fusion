@@ -29,7 +29,6 @@
   import { generatePartition } from '@/yunbaopo/graphics/layers/partition-layer';
   import { message } from 'ant-design-vue';
 
-  let tempPolyline: fabric.Polyline | null = null;
   // 定义容器和画布的引用
   const containerRef = ref<HTMLDivElement | null>(null);
   const canvasRef = ref<HTMLCanvasElement | null>(null);
@@ -37,6 +36,7 @@
   // 多段线绘制状态
   let isDrawingPolyline = false;
   let polylinePoints: { x: number; y: number }[] = [];
+  let tempPolyline: fabric.Polyline | null = null;
   let guideLine: fabric.Line | null = null;
   const uuid = ref('');
   let isDrawing = false;
