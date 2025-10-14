@@ -91,7 +91,7 @@
   const initScene = () => {
     scene = new THREE.Scene();
     // scene.background = new THREE.Color(0xf0f0f0);
-    scene.background = new THREE.Color(0x000000);
+    scene.background = new THREE.Color(0xffffff);
 
     // 添加辅助坐标轴
     axesHelper = new THREE.AxesHelper(100);
@@ -339,15 +339,15 @@
         const position = geometry.attributes.position;
         const count = position.count;
 
-        const colors = new Float32Array(count * 3);
-        for (let i = 0; i < count; i++) {
-          const y = position.getY(i);
-          const color = new THREE.Color(y >= 0 ? 0xff0000 : 0xffff00);
-          colors[i * 3 + 0] = color.r;
-          colors[i * 3 + 1] = color.g;
-          colors[i * 3 + 2] = color.b;
-        }
-        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        // const colors = new Float32Array(count * 3);
+        // for (let i = 0; i < count; i++) {
+        //   const y = position.getY(i);
+        //   const color = new THREE.Color(y >= 0 ? 0xff0000 : 0xffff00);
+        //   colors[i * 3 + 0] = color.r;
+        //   colors[i * 3 + 1] = color.g;
+        //   colors[i * 3 + 2] = color.b;
+        // }
+        // geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
         points.material.vertexColors = true;
         console.log('本地 PCD 加载成功', points);
         console.log('几何体属性列表：', points.geometry.attributes);
