@@ -4,6 +4,7 @@ import { type UserConfig } from 'vite';
 const commonConfig: (mode: string) => UserConfig = (mode) => ({
   server: {
     host: true,
+    allowedHosts: true,
   },
   esbuild: {
     pure: mode === 'production' ? ['console.log'] : [],

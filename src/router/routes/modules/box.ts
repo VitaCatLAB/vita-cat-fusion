@@ -125,6 +125,33 @@ const box: AppRouteModule = {
       },
     },
     {
+      path: 'three-fusion-pcd',
+      name: 'box-three-fusion-pcd',
+      component: () => import('@/views/box/three/three-fusion-pcd.vue'),
+      meta: {
+        title: 'three-fusion-pcd',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
+    {
+      path: 'three-fusion-potree',
+      name: 'box-three-fusion-potree',
+      component: () => import('@/views/box/three/three-fusion-potree.vue'),
+      meta: {
+        title: 'three-fusion-potree',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
+    {
+      path: 'three-fusion-grid',
+      name: 'box-three-fusion-grid',
+      component: () => import('@/views/box/three/three-fusion-grid.vue'),
+      meta: {
+        title: 'three-fusion-grid',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
+    {
       path: 'box-util-localforage',
       name: 'box-util-localforage',
       component: () => import('@/views/box/util/localforage.vue'),

@@ -194,6 +194,40 @@ export class FabricLayerManager {
   }
 
   /**
+   * 获取当前画布中所有图层名称（去重）
+   * @param opts.sort 排序方式：'zIndex'（默认，按首个对象的堆叠顺序）、'alpha'（字母序）、'none'
+   * @param opts.includeHidden 是否包含不可见对象所在图层，默认 true
+   */
+  public getAllLayerNames(
+    opts: { sort?: 'zIndex' | 'alpha' | 'none'; includeHidden?: boolean } = {},
+  ): string[] {
+    const { sort = 'zIndex', includeHidden = true } = opts;
+
+    const stack = this.canvas.getObjects();
+    // 记录每个图层在画布堆叠中的“首个出现索引”，用于稳定排序
+    const firstIndexByLayer = new Map<string, number>();
+
+    stack.forEach((obj, idx) => {
+      const layer = (obj as FabricObjectWithLayer).layer;
+      if (!layer) return;
+      if (!includeHidden && obj.visible === false) return;
+      if (!firstIndexByLayer.has(layer)) {
+        firstIndexByLayer.set(layer, idx);
+      }
+    });
+
+    const layers = Array.from(firstIndexByLayer.keys());
+
+    if (sort === 'alpha') {
+      layers.sort((a, b) => a.localeCompare(b));
+    } else if (sort === 'zIndex') {
+      layers.sort((a, b) => firstIndexByLayer.get(a)! - firstIndexByLayer.get(b)!);
+    }
+    // sort === 'none' 时保留插入顺序（即首次出现顺序）
+    return layers;
+  }
+
+  /**
    * 内部方法：日志输出
    * @param message 输出信息
    */
