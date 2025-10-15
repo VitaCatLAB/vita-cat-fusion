@@ -16,11 +16,22 @@
   import 'dayjs/locale/zh-cn';
   import { computed } from 'vue';
 
+  declare global {
+    interface Window {
+      api: {
+        getVersion: () => Promise<string>;
+      };
+    }
+  }
   // support Multi-language
   const { getAntdLocale } = useLocale();
 
   const { isDark, darkTheme } = useDarkModeTheme();
-
+  // 使用示例
+  async function showVersion() {
+    const v = await window.api.getVersion();
+    console.log('App Version:', v);
+  }
   const themeConfig = computed(() =>
     Object.assign(
       {

@@ -8,18 +8,23 @@
     "url": "https://hean.im"
   },
   "type": "module",
-  "main": "dist/main/build.js",
+  "main": "electron/main.js",
   "scripts": {
     "bootstrap": "pnpm install",
     "build": "cross-env NODE_ENV=production NODE_OPTIONS=--max-old-space-size=8192 pnpm vite build",
     "build:analyze": "cross-env NODE_OPTIONS=--max-old-space-size=8192 pnpm vite build --mode analyze",
     "build:beta": "cross-env NODE_OPTIONS=--max-old-space-size=8192 pnpm vite build --mode beta",
+    "build:desktop": "pnpm build && pnpm build:electron",
     "build:dev": "cross-env NODE_OPTIONS=--max-old-space-size=8192 pnpm vite build --mode development",
     "build:docker": "vite build --mode docker",
+    "build:electron": "tsc -p electron.tsconfig.json",
     "build:no-cache": "pnpm store prune && npm run build",
     "build:test": "cross-env NODE_OPTIONS=--max-old-space-size=8192 pnpm vite build --mode test",
     "commit": "czg",
     "dev": "pnpm vite",
+    "dev:desktop": "concurrently -k -r \"pnpm dev:electron\" \"node scripts/dev-electron.mjs\"",
+    "dev:electron": "tsc -p electron.tsconfig.json --watch",
+    "dist": "pnpm build:desktop && electron-builder",
     "preinstall": "npx only-allow pnpm",
     "postinstall": "turbo run stub",
     "lint": "turbo run lint",
@@ -118,8 +123,8 @@
     "vue-router": "^4.3.2",
     "vue-types": "^5.1.1",
     "vuedraggable": "^4.1.0",
-    "vxe-table": "^4.6.3",
-    "vxe-table-plugin-export-xlsx": "^4.0.1",
+    "vxe-table": "4.4.5",
+    "vxe-table-plugin-export-xlsx": "3.0.4",
     "xe-utils": "^3.5.25",
     "xlsx": "^0.18.5"
   },
@@ -132,6 +137,7 @@
     "@types/crypto-js": "^4.2.2",
     "@types/lodash-es": "^4.17.12",
     "@types/mockjs": "^1.0.10",
+    "@types/node": "^24.7.2",
     "@types/nprogress": "^0.2.3",
     "@types/qrcode": "^1.5.5",
     "@types/qs": "^6.9.15",
@@ -145,10 +151,13 @@
     "@vben/vite-config": "workspace:*",
     "@vue/compiler-sfc": "^3.4.25",
     "@vue/test-utils": "^2.4.5",
+    "concurrently": "^9.2.1",
     "conventional-changelog-cli": "^4.1.0",
     "cross-env": "^7.0.3",
     "cz-git": "^1.9.1",
     "czg": "^1.9.1",
+    "electron": "^38.2.2",
+    "electron-builder": "^26.0.12",
     "lint-staged": "15.2.2",
     "prettier": "^3.2.5",
     "prettier-plugin-packagejson": "^2.5.0",
@@ -159,7 +168,8 @@
     "vite": "^5.2.10",
     "vite-plugin-mock": "^2.9.6",
     "vite-plugin-vue-devtools": "^7.2.0",
-    "vue-tsc": "^2.0.14"
+    "vue-tsc": "^2.0.14",
+    "wait-on": "^9.0.1"
   },
   "packageManager": "pnpm@9.0.4",
   "engines": {
@@ -167,43 +177,31 @@
     "pnpm": ">=9.0.2"
   },
   "build": {
-    "appId": "xxx@gmail.com",
-    "electronDownload": {
-      "mirror": "https://npmmirror.com/mirrors/electron/"
-    },
+    "appId": "com.yourcompany.yourapp",
+    "productName": "YourApp",
     "files": [
-      "!node_modules",
-      "dist/**"
+      "dist/**",
+      "electron/**"
     ],
-    "asar": false,
-    "mac": {
-      "artifactName": "${productName}_setup_${version}.${ext}",
-      "target": [
-        "dmg"
-      ]
+    "extraMetadata": {
+      "main": "electron/main.js"
     },
-    "linux": {
-      "icon": "build/icons/512x512.png",
+    "mac": {
       "target": [
-        "deb"
+        "dmg",
+        "zip"
       ]
     },
     "win": {
       "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
+        "nsis"
       ],
-      "artifactName": "${productName}_setup_${version}.${ext}"
+      "artifactName": "${productName}_Setup_${version}.${ext}"
     },
-    "nsis": {
-      "oneClick": false,
-      "perMachine": false,
-      "allowToChangeInstallationDirectory": true,
-      "deleteAppDataOnUninstall": false
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
     }
   }
 }
