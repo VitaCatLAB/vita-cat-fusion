@@ -32,6 +32,7 @@
     const v = await window.api.getVersion();
     console.log('App Version:', v);
   }
+  showVersion();
   const themeConfig = computed(() =>
     Object.assign(
       {
