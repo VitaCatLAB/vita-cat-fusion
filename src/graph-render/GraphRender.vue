@@ -39,7 +39,9 @@
   /* =========================
    * Fabric 渲染核心
    * ========================= */
-  import { FabricRender, fabric, FabricObjectWithLayer } from '@fabric-fusion/core';
+  // import { FabricRender, fabric, FabricObjectWithLayer } from '@fabric-fusion/core';
+  // import { FabricRender, fabric, FabricObjectWithLayer } from '@/fabric-fusion/v5/core';
+  import { FabricRender, fabric, FabricObjectWithLayer } from '@/fabric-fusion/v6/core';
 
   /* =========================
    * 业务组件
