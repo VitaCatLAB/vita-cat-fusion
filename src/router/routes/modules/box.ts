@@ -169,6 +169,15 @@ const box: AppRouteModule = {
         icon: 'simple-icons:boxdotme',
       },
     },
+    {
+      path: 'box-util-fabric-graph',
+      name: 'fabric-graph',
+      component: () => import('@/views/box/render/index.vue'),
+      meta: {
+        title: 'box-fabric-graph',
+        icon: 'simple-icons:boxdotme',
+      },
+    },
   ],
 };
 
