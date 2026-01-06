@@ -11,10 +11,11 @@
 </template>
 
 <script lang="ts" setup>
-  import { useGraphFusionStore } from '@/store/modules/graphFusion';
   // import GraphRender from './GraphRender.vue';
-  import { CanvasNameEnum } from '@/graph-schema';
+
   import GraphRender from '@/graph-render/GraphRender.vue';
+  import { CanvasNameEnum } from '@/fabric-fusion-graph';
+  import { useGraphFusionStore } from '@/fabric-fusion-graph/store/graphFusion';
 
   const graphFusionStore = useGraphFusionStore();
 

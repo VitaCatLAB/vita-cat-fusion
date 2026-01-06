@@ -1,24 +1,22 @@
-export interface IFabricObject extends fabric.Object {
+import type { Canvas, FabricObject } from 'fabric';
+export interface IFabricObject extends FabricObject {
   metaData: any;
 }
-export interface IFabricGroup extends fabric.Group {
+export interface IFabricGroup extends FabricObject {
   metaData: any;
 }
-export interface IFabricEvent extends fabric.IEvent {
+export interface IFabricEvent extends FabricObject {
   target: IFabricObject;
 }
-export interface FabricObjectWithLayer extends fabric.Object {
+export interface FabricObjectWithLayer extends FabricObject {
   layer?: string;
   tooltip?: string;
   tooltipPosition?: 'TL' | 'TR' | 'BL' | 'BR';
 }
-
-import { fabric } from './fabric-render';
-
 /**
  * 扩展 Fabric.Object，使其具备图层属性
  */
-export interface FabricObjectWithLayer extends fabric.Object {
+export interface FabricObjectWithLayer extends FabricObject {
   /**
    * 所属图层名称
    */

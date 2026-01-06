@@ -1,4 +1,4 @@
-import { CanvasLayerEnum } from './layer.enum';
+import { CanvasLayerEnum } from '../layer';
 
 /**
  * 图层渲染顺序预设（从底到顶）

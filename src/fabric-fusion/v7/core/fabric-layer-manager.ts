@@ -1,13 +1,13 @@
-import { fabric } from './fabric-render';
+import { StaticCanvas, FabricObject, Group } from 'fabric';
 import { FabricObjectWithLayer } from './type';
 
 /**
  * Fabric 图层管理器
  */
 export class FabricLayerManager {
-  private canvas: fabric.Canvas;
+  private canvas: StaticCanvas;
 
-  constructor(canvas: fabric.Canvas) {
+  constructor(canvas: StaticCanvas) {
     this.canvas = canvas;
   }
 
@@ -16,7 +16,7 @@ export class FabricLayerManager {
    * @param object fabric 对象
    * @param layer 图层名
    */
-  public setLayer(object: fabric.Object, layer: string) {
+  public setLayer(object: FabricObject, layer: string) {
     if (object) {
       (object as FabricObjectWithLayer).layer = layer;
     }
@@ -27,7 +27,7 @@ export class FabricLayerManager {
    * @param objects 对象数组
    * @param layer 图层名
    */
-  public setObjectsToLayer(objects: fabric.Object[], layer: string) {
+  public setObjectsToLayer(objects: FabricObject[], layer: string) {
     objects.forEach((obj) => this.setLayer(obj, layer));
   }
 
@@ -35,7 +35,7 @@ export class FabricLayerManager {
    * 获取指定图层的所有对象
    * @param layer 图层名
    */
-  public getObjectsByLayer(layer: string): fabric.Object[] {
+  public getObjectsByLayer(layer: string): FabricObject[] {
     return this.canvas.getObjects().filter((obj) => (obj as FabricObjectWithLayer).layer === layer);
   }
 
@@ -126,7 +126,7 @@ export class FabricLayerManager {
       this.log(`图层 ${layer} 无对象可提升`);
       return;
     }
-    objects.forEach((obj) => this.canvas.bringToFront(obj));
+    objects.forEach((obj) => this.canvas.bringObjectToFront(obj));
     this.canvas.requestRenderAll();
   }
 
@@ -140,7 +140,7 @@ export class FabricLayerManager {
       this.log(`图层 ${layer} 无对象可发送到底层`);
       return;
     }
-    objects.forEach((obj) => this.canvas.sendToBack(obj));
+    objects.forEach((obj) => this.canvas.sendObjectToBack(obj));
     this.canvas.requestRenderAll();
   }
 
@@ -155,7 +155,7 @@ export class FabricLayerManager {
       this.log(`图层 ${layer} 无对象可移动`);
       return;
     }
-    objects.forEach((obj, i) => this.canvas.moveTo(obj, startIndex + i));
+    objects.forEach((obj, i) => this.canvas.moveObjectTo(obj, startIndex + i));
     this.canvas.requestRenderAll();
   }
 
@@ -163,14 +163,14 @@ export class FabricLayerManager {
    * 将图层对象合并成一个组（fabric.Group）
    * @param layer 图层名
    */
-  public groupLayer(layer: string): fabric.Group | null {
+  public groupLayer(layer: string): Group | null {
     const objects = this.getObjectsByLayer(layer);
     if (objects.length === 0) {
       this.log(`图层 ${layer} 无对象可组合`);
       return null;
     }
 
-    const group = new fabric.Group(objects);
+    const group = new Group(objects);
     // 将所有对象移除后再添加 group
     objects.forEach((obj) => this.canvas.remove(obj));
     this.canvas.add(group);

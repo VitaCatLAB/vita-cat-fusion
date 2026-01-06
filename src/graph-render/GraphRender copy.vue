@@ -52,20 +52,20 @@
   /* =========================
    * 状态管理
    * ========================= */
-
+  import { useGraphFusionStore } from '@/store/modules/graphFusion';
   import { storeToRefs } from 'pinia';
+
+  /* =========================
+   * 工具与配置
+   * ========================= */
+
+  import { generateObjects } from '@/yunbaopo/graphics/layers/simple-layer';
   import {
     CanvasLayerEnum,
     CanvasLayerGroupPresets,
     CanvasLayerOrderPreset,
     CanvasNameEnum,
-  } from '@/fabric-fusion-graph';
-  import { generateObjects } from '@/fabric-fusion-graph/layer/simple-layer';
-  import { useGraphFusionStore } from '@/fabric-fusion-graph/store/graphFusion';
-
-  /* =========================
-   * 工具与配置
-   * ========================= */
+  } from '@/graph-schema';
 
   /* =========================
    * DOM 引用
