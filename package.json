@@ -112,7 +112,6 @@
     "showdown": "^2.1.0",
     "sortablejs": "^1.15.2",
     "three": "^0.172.0",
-    "three-mesh-bvh": "^0.9.1",
     "tinymce": "^5.10.9",
     "unocss": "^0.59.4",
     "uuid": "^11.0.5",
@@ -135,6 +134,7 @@
     "@purge-icons/generated": "^0.10.0",
     "@types/codemirror": "^5.60.15",
     "@types/crypto-js": "^4.2.2",
+    "@types/estree": "^1.0.8",
     "@types/lodash-es": "^4.17.12",
     "@types/mockjs": "^1.0.10",
     "@types/node": "^24.7.2",
@@ -181,7 +181,20 @@
     "productName": "YourApp",
     "files": [
       "dist/**",
-      "electron/**"
+      "electron/**",
+      "apps/nest-server/dist/**"
+    ],
+    "extraResources": [
+      {
+        "from": "apps/nest-server/dist",
+        "to": "nest-server/dist"
+      }
+    ],
+    "extraFiles": [
+      {
+        "from": "apps/nest-server/dist",
+        "to": "nest-server"
+      }
     ],
     "extraMetadata": {
       "main": "electron/main.js"

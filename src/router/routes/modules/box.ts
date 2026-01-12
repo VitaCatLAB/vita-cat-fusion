@@ -124,15 +124,6 @@ const box: AppRouteModule = {
         icon: 'simple-icons:boxdotme',
       },
     },
-    {
-      path: 'three-fusion-pcd',
-      name: 'box-three-fusion-pcd',
-      component: () => import('@/views/box/three/three-fusion-pcd.vue'),
-      meta: {
-        title: 'three-fusion-pcd',
-        icon: 'simple-icons:boxdotme',
-      },
-    },
 
     {
       path: 'three-fusion-grid',

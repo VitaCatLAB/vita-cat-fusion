@@ -7,7 +7,7 @@ const commonConfig: (mode: string) => UserConfig = (mode) => ({
     allowedHosts: true,
   },
   esbuild: {
-    pure: mode === 'production' ? ['console.log'] : [],
+    // pure: mode === 'production' ? ['console.log'] : [],
     // drop: mode === 'production' ? ['console', 'debugger'] : [],
   },
   build: {
