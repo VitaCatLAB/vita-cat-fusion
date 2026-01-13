@@ -28,35 +28,50 @@ function logMain(...args: any[]) {
 
   fs.appendFileSync(logFile, msg, 'utf8');
 }
-
+function attachNestLogs(proc: any) {
+  proc.stdout?.on('data', (d: any) => logMain('[nest]', d.toString()));
+  proc.stderr?.on('data', (d: any) => logMain('[nest err]', d.toString()));
+  proc.on('error', (e: any) => logMain('Nest spawn error:', String(e)));
+  proc.on('exit', (code: any, signal: any) => logMain('Nest exited:', { code, signal }));
+}
 function startNestServer() {
   logMain('resourcesPath:', process.resourcesPath);
-  logMain('resourcesPath:', app.isPackaged);
+  logMain('isPackaged:', app.isPackaged);
 
   if (app.isPackaged) {
-    const serverEntry = path.join(process.resourcesPath, 'nest-server/dist/main.js');
+    const serverEntry = path.join(process.resourcesPath, 'nest-server', 'dist', 'main.js');
 
     logMain('serverEntry:', serverEntry);
     logMain('exists:', fs.existsSync(serverEntry));
+
+    if (!fs.existsSync(serverEntry)) {
+      logMain('Nest entry not found, abort start.');
+      return;
+    }
+
     nestProcess = spawn(process.execPath, [serverEntry], {
+      cwd: path.dirname(serverEntry),
       stdio: ['ignore', 'pipe', 'pipe'],
-      detached: false,
+      windowsHide: true,
       env: {
         ...process.env,
+        ELECTRON_RUN_AS_NODE: '1',
+        PORT: process.env.NEST_PORT || '3000',
+        DB_DIR: app.getPath('userData'),
         NODE_ENV: 'production',
       },
     });
+
+    nestProcess.stdout?.on('data', (d: any) => logMain('[nest]', d.toString()));
+    nestProcess.stderr?.on('data', (d: any) => logMain('[nest err]', d.toString()));
+    nestProcess.on('error', (e: any) => logMain('Nest spawn error:', String(e)));
+    nestProcess.on('exit', (code: any, signal: any) => logMain('Nest exited:', { code, signal }));
   } else {
-    // 开发态直接用 NestJS watch
     nestProcess = spawn('pnpm', ['--filter', 'nest-server', 'run', 'start:dev'], {
       stdio: 'inherit',
-      cwd: path.join(__dirname, '../apps/nest-server'), // 🔑 确保 cwd 正确
+      cwd: path.join(__dirname, '../apps/nest-server'),
     });
   }
-
-  nestProcess.stdout?.on('data', (d: any) => logMain('[nest]', d.toString()));
-  nestProcess.stderr?.on('data', (d: any) => logMain('[nest err]', d.toString()));
-  nestProcess.on('exit', (code: any) => logMain('Nest exited with code:', code));
 }
 
 function createWindow() {
@@ -94,8 +109,9 @@ function createWindow() {
 
 /** ===== 应用生命周期 ===== */
 app.whenReady().then(() => {
-  createWindow();
   startNestServer();
+
+  createWindow();
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });

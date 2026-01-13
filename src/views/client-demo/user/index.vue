@@ -19,7 +19,7 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue';
 
-  const API_BASE = 'http://localhost:3000';
+  const API_BASE = 'http://127.0.0.1:3000';
 
   const register = reactive({
     username: '',
