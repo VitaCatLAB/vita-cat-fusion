@@ -6,7 +6,6 @@ import fs from 'node:fs';
 let nestProcess;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// 开发态：由脚本注入 http://localhost:5173
 const DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL || '';
 const isDev = !!DEV_SERVER_URL;
 let win = null;
