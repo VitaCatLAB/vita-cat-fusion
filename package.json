@@ -12,11 +12,11 @@
   "scripts": {
     "bootstrap": "pnpm install",
     "build:clean": "pnpm store prune && rimraf dist electron/dist",
-    "build:desktop": "pnpm build:web && pnpm build:electron",
+    "build:desktop": "pnpm build:web && pnpm build:nest:deploy && pnpm build:electron",
     "build:electron": "pnpm build:electron:compile && pnpm build:electron:pack",
     "build:electron:compile": "tsc -p electron.tsconfig.json",
     "build:electron:pack": "electron-builder",
-    "build:nest": "pnpm --filter nest-server build",
+    "build:nest:deploy": "pnpm --filter ./apps/nest-server build && pnpm deploy --filter ./apps/nest-server --prod ./dist/nest-server-deploy",
     "build:no-cache": "pnpm store prune && npm run build",
     "build:web": "cross-env NODE_ENV=production NODE_OPTIONS=--max-old-space-size=8192 pnpm vite build",
     "build:web:beta": "cross-env NODE_OPTIONS=--max-old-space-size=8192 pnpm vite build --mode beta",
@@ -34,7 +34,7 @@
     "lint:stylelint": "stylelint \"**/*.{vue,css,less,scss}\" --fix --cache --cache-location node_modules/.cache/stylelint/",
     "log": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "preview": "npm run build && vite preview",
-    "reinstall": "rimraf pnpm-lock.yaml && rimraf package.lock.json && rimraf node_modules && npm run bootstrap",
+    "reinstall": "rimraf pnpm-lock.yaml && rimraf apps/**/node_modules && rimraf package.lock.json && rimraf node_modules && npm run bootstrap",
     "serve": "npm run dev",
     "test:gzip": "npx http-server dist --cors --gzip -c-1",
     "type:check": "vue-tsc --noEmit --skipLibCheck"
@@ -177,23 +177,27 @@
     "node": ">=18.12.0",
     "pnpm": ">=9.0.2"
   },
+  "pnpm": {
+    "overrides": {
+      "canvas": "^3.2.1",
+      "esbuild": "0.21.5",
+      "node-gyp": "12.1.0"
+    }
+  },
   "build": {
     "appId": "com.yourcompany.yourapp",
+    "afterPack": "scripts/afterPack.cjs",
     "productName": "YourApp",
+    "asarUnpack": [
+      "nest-server/**"
+    ],
     "files": [
       "dist/**",
-      "electron/**",
-      "apps/nest-server/dist/**"
+      "electron/**"
     ],
     "extraResources": [
       {
-        "from": "apps/nest-server/dist",
-        "to": "nest-server/dist"
-      }
-    ],
-    "extraFiles": [
-      {
-        "from": "apps/nest-server/dist",
+        "from": "dist/nest-server-deploy",
         "to": "nest-server"
       }
     ],
