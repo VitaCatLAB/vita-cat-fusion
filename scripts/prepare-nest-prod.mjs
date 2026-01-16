@@ -37,7 +37,7 @@ async function main() {
       );
     },
   });
-
+  await fs.move(path.join(dir, 'node_modules'), path.join(dir, 'node_deps'), { overwrite: true });
   console.log('✅ Nest files copied');
 
   // 3️⃣ 确保 dist 存在
