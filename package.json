@@ -187,9 +187,6 @@
   "build": {
     "appId": "com.yourcompany.yourapp",
     "productName": "YourApp",
-    "asarUnpack": [
-      "nest-server/**"
-    ],
     "files": [
       "dist/**",
       "electron/**"
@@ -197,7 +194,12 @@
     "extraResources": [
       {
         "from": ".build/nest-server",
-        "to": "nest-server"
+        "to": "nest-server",
+        "filter": [
+          "dist/**",
+          "node_modules/**",
+          "package.json"
+        ]
       }
     ],
     "extraMetadata": {
