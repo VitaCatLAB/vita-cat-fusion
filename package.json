@@ -187,6 +187,10 @@
   "build": {
     "appId": "com.yourcompany.yourapp",
     "productName": "YourApp",
+    "asar": true,
+    "asarUnpack": [
+      "**/nest-server/**"
+    ],
     "files": [
       "dist/**",
       "electron/**"
