@@ -12,12 +12,13 @@
   "scripts": {
     "bootstrap": "pnpm install",
     "build:clean": "pnpm store prune && rimraf dist electron/dist",
-    "build:desktop": "pnpm build:web && pnpm build:nest && pnpm prepare:nest:prod  && pnpm build:electron",
+    "build:desktop": "pnpm build:web && pnpm build:nest && pnpm build:prepare:nest:prod  && pnpm build:electron",
     "build:electron": "pnpm build:electron:compile && pnpm build:electron:pack",
     "build:electron:compile": "tsc -p electron.tsconfig.json",
     "build:electron:pack": "electron-builder",
     "build:nest": "pnpm --filter ./apps/nest-server build",
     "build:no-cache": "pnpm store prune && npm run build",
+    "build:prepare:nest:prod": "node scripts/prepare-nest-prod.mjs",
     "build:web": "cross-env NODE_ENV=production NODE_OPTIONS=--max-old-space-size=8192 pnpm vite build",
     "build:web:beta": "cross-env NODE_OPTIONS=--max-old-space-size=8192 pnpm vite build --mode beta",
     "build:web:dev": "cross-env NODE_OPTIONS=--max-old-space-size=8192 pnpm vite build --mode development",
@@ -32,7 +33,6 @@
     "lint:prettier": "prettier --write .",
     "lint:stylelint": "stylelint \"**/*.{vue,css,less,scss}\" --fix --cache --cache-location node_modules/.cache/stylelint/",
     "log": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "prepare:nest:prod": "node scripts/prepare-nest-prod.mjs",
     "preview": "npm run build && vite preview",
     "reinstall": "rimraf pnpm-lock.yaml && rimraf apps/**/node_modules && rimraf package.lock.json && rimraf node_modules && npm run bootstrap",
     "serve": "npm run dev",
@@ -196,13 +196,8 @@
     ],
     "extraResources": [
       {
-        "from": "apps/nest-server",
-        "to": "nest-server",
-        "filter": [
-          "dist/**",
-          "node_modules/**",
-          "package.json"
-        ]
+        "from": ".build/nest-server",
+        "to": "nest-server"
       }
     ],
     "extraMetadata": {
