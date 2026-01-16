@@ -41,6 +41,7 @@ function startNestServer() {
   if (app.isPackaged) {
     const serverEntry = path.join(process.resourcesPath, 'nest-server', 'dist', 'main.js');
     const nestRoot = path.join(process.resourcesPath, 'nest-server');
+    const nodeDeps = path.join(nestRoot, 'node_deps');
     logMain('serverEntry:', serverEntry);
     logMain('exists:', fs.existsSync(serverEntry));
 
@@ -59,7 +60,7 @@ function startNestServer() {
         PORT: process.env.NEST_PORT || '3000',
         DB_DIR: app.getPath('userData'),
         NODE_ENV: 'production',
-        NODE_PATH: path.join(nestRoot, 'node_deps'),
+        NODE_PATH: nodeDeps, // 关键：指向 node_deps
       },
     });
 
