@@ -48,8 +48,9 @@ async function main() {
 
   // 4️⃣ 安装 production 依赖
   run('npm install --production', DIST);
-
-  // 5️⃣ 重命名 node_modules 为 node_deps（解决 electron-builder 不复制 node_modules 的问题）
+  // 5️⃣ 用 Electron Node 重新编译原生模块
+  run('npx electron-rebuild -f -w better-sqlite3', DIST);
+  // 6️⃣ 重命名 node_modules 为 node_deps（解决 electron-builder 不复制 node_modules 的问题）
   const nodeModulesPath = path.join(DIST, 'node_modules');
   const nodeDepsPath = path.join(DIST, 'node_deps');
   if (fs.existsSync(nodeModulesPath)) {
